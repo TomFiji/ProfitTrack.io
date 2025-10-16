@@ -14,7 +14,7 @@ function MonthlyLineChart({ height = 400, width = "40vw" }){
 
     const fetchAllMonthlyPayouts = async (req, res) => {
         try {
-            const res = await fetch("http://localhost:5000/api/ebay-payouts");
+            const res = await fetch("http://localhost:5000/api/ebay/payouts");
 
             const data = await res.json();
 

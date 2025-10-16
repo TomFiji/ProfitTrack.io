@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "server": "nodemon server/server.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -19,6 +20,7 @@
     "axios": "^1.9.0",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "nodemon": "^3.1.10",
     "pg": "^8.16.3",

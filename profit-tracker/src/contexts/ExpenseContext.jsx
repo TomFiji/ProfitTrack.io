@@ -1,4 +1,4 @@
-import {createContext, useState, useContext, useEffect, useMemo, useCallback} from "react"
+import {createContext, useState, useContext, useEffect, useCallback} from "react"
 
 const ExpenseContext = createContext();
 
@@ -19,7 +19,7 @@ export const ExpenseProvider = ({children}) => {
 
     const fetchGrossPayout = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/ebay-payouts");
+                const res = await fetch("http://localhost:5000/api/ebay/payouts");
 
                 const data = await res.json();
                 let grossPayout = 0;
@@ -39,7 +39,7 @@ export const ExpenseProvider = ({children}) => {
 
     const fetchMonthlyPayout = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/ebay-monthly-payouts");
+                const res = await fetch("http://localhost:5000/api/ebay/monthly-payouts");
 
                 const data = await res.json();
                 let grossPayout = 0;
