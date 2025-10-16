@@ -1,0 +1,18 @@
+.expense-form-div{
+    display: flex;
+    margin-left: 5em;
+    margin-bottom: 30px;
+}
+
+label{
+    margin-left: 10px;
+}
+
+.submit-button{
+    background-color: rgb(0, 192, 217);
+    margin-left: 20px;
+}
+
+.expense-name{
+    width: 400px;
+}

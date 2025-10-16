@@ -1,0 +1,12 @@
+.root {
+  padding: calc(var(--mantine-spacing-xl) * 1.5);
+}
+
+.label {
+  font-family: Outfit, var(--mantine-font-family);
+}
+
+.solo-grid{
+  flex-direction: row;
+  justify-content: center;
+}

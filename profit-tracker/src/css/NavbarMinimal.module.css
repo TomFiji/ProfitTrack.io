@@ -1,0 +1,53 @@
+/* NavbarMinimal.module.css
+   Clean CSS module for a slim, sticky left sidebar.
+*/
+
+.navbar {
+  width: 80px;
+  height: 100vh; /* full viewport height */
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  flex-shrink: 0; /* keep sidebar width fixed */
+  background: transparent;
+}
+
+.navbarMain {
+  flex: 1;
+  margin-top: 300px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.link {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.link:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.link[data-active] {
+  background-color: #e6f0ff;
+  color: #0b62d6;
+}
+
+.logoCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+}
