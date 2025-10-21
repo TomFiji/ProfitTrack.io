@@ -3,6 +3,7 @@ import axios from "axios";
 import supabase from '../config/supabase.js';
 import { Buffer } from 'node:buffer';
 import { authenticateUser } from '../middleware/auth.js';
+import { getValidAccessToken } from '../utils/ebayAuth.js';
 const router = express.Router()
 
 const BEARER_TOKEN = process.env.EBAY_BEARER_TOKEN
@@ -12,19 +13,11 @@ let currentDate = `${date.getFullYear()}-${date.getMonth() +1}-${date.getDate()}
 
 //Gets ebay payouts for the entire year and is used in fetchGrossPayouts()
 router.get("/payouts", authenticateUser, async (req, res) => {
+    const access_token = getValidAccessToken(req.user.id)
     try{
-        const { data, error } = await supabase
-        .from('ebay_connections')
-        .select('*')
-        .eq('user_id', req.user.id)
-        .single();
-        if (error) { throw error || "No data found"}
-        if (data!=null) { return res.status(400).json({
-            error: 'eBay account not connected. Please connect your eBay account first'
-        })}
         const response = await axios.get(`https://apiz.ebay.com/sell/finances/v1/payout?filter=payoutDate:[${date.getFullYear()}-1-1T00:00:01.000Z..${currentDate}T00:00:01.000Z]&limit=200&offset=0`, {
             headers: {
-                Authorization: `Bearer ${data.access_token}`,
+                Authorization: `Bearer ${access_token}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -39,18 +32,10 @@ router.get("/payouts", authenticateUser, async (req, res) => {
 //Gets ebay payout for the total month to calculate monthly profit
 router.get("/monthly-payouts", authenticateUser, async (req, res) => {
     try{
-        const { data, error } = await supabase
-        .from('ebay_connections')
-        .select('*')
-        .eq('user_id', req.user.id)
-        .single();
-        if (error) { throw error || "No data found"}
-        if (data!=null) { return res.status(400).json({
-            error: 'eBay account not connected. Please connect your eBay account first'
-        })}
+        const access_token = getValidAccessToken(req.user.id)
         const response = await axios.get(`https://apiz.ebay.com/sell/finances/v1/payout?filter=payoutDate:[${date.getFullYear()}-${date.getMonth() +1}-1T00:00:01.000Z..${currentDate}T00:00:01.000Z]&limit=200&offset=0`, {
             headers: {
-                Authorization: `Bearer ${data.access_token}`,
+                Authorization: `Bearer ${access_token}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -68,7 +53,7 @@ router.get("/connect", authenticateUser, (req, res) => {
         timestamp: Date.now()
     })).toString('base64');
 
-    const authUrl = 'https://auth.sandbox.ebay.com/oauth2/authorize?' +
+    const authUrl = 'https://auth.ebay.com/oauth2/authorize?' +
         `client_id=${process.env.EBAY_CLIENT_ID}&` +
         `response_type=code&` +
         `redirect_uri=${process.env.EBAY_RUNAME}&` +
@@ -87,7 +72,7 @@ router.get("/callback", async(req,res) =>{
         const { userId } = JSON.parse(Buffer.from(state, 'base64').toString())
         const credentials_encoded = Buffer.from(`${process.env.EBAY_CLIENT_ID}:${process.env.EBAY_CLIENT_SECRET}`).toString('base64')
 
-        const tokenResponse = await axios.post('https://api.sandbox.ebay.com/identity/v1/oauth2/token',
+        const tokenResponse = await axios.post('https://api.ebay.com/identity/v1/oauth2/token',
             new URLSearchParams({
                 grant_type: 'authorization_code',
                 code: code,
