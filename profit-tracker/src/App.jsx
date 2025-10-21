@@ -3,6 +3,8 @@ import Home from './pages/Home';
 import Expenses from './pages/Expenses';
 import Filter from './pages/Filter'
 import Analytics from './pages/Analytics';
+import SignupPage from './pages/Signup';
+import SigninPage from './pages/Signin_Page';
 import {Routes, Route} from 'react-router-dom';
 import NavbarMinimal from "./components/Sidebar"
 import "./css/App.css"
@@ -19,10 +21,13 @@ function App() {
           <NavbarMinimal />
           <main className="main-content">
             <Routes>
+              
               <Route path="/" element={<Home />}/>
               <Route path="/expenses" element={<Expenses />}/>
               <Route path="/filter" element={<Filter />}/>
               <Route path="/analytics" element={<Analytics />}/>
+              <Route path="/signup" element={<SignupPage />}/>
+              <Route path="/signin" element={<SigninPage />}/>
             </Routes>
           </main>
         </div>
