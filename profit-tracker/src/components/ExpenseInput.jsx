@@ -42,7 +42,7 @@ function ExpenseInput() {
     }
 
     return (
-        <>
+        <div className='html'>
             <div className='expense-form-div'>
                 <form onSubmit={handleSubmit} className='expense-form'>
                     <label htmlFor='expense-type'>Expense Category: </label>
@@ -63,7 +63,7 @@ function ExpenseInput() {
                     <button className="submit-button" type="submit">Submit</button>
                 </form>
             </div>
-        </>    
+        </div>    
     )
 
 }
