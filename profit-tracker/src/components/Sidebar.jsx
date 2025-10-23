@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { IconDeviceDesktopAnalytics, IconHome2, IconCoin, IconFilter } from '@tabler/icons-react';
 import { Center, Stack, Tooltip, UnstyledButton } from '@mantine/core';
-import EbayLogo from '../assets/ebay-logo.svg';
+import ProfitTrackLogo from '../assets/profittrack-text-only.svg';
 import classes from '../css/NavbarMinimal.module.css';
 function NavbarLink({ icon: Icon, label, active, onClick }) {
     return (<Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
@@ -37,7 +37,7 @@ export function NavbarMinimal() {
         }/>));
     return (<nav className={classes.navbar}>
       <Center>
-        <img src={EbayLogo} alt="eBay" style={{ width: 48, height: 24 }} />
+        <img src={ProfitTrackLogo} alt="ProfitTrack" style={{ width: '100%', maxWidth: 60, height: 'auto' }} />
       </Center>
 
       <div className={classes.navbarMain}>

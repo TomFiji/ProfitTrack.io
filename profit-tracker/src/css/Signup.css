@@ -5,7 +5,9 @@
     --text-color: #03045E;
     --input-color: #c0cdf1;
 }
-*{
+
+/* Scoped reset for signup component only */
+.sign-up-div *{
     margin: 0;
     padding: 0;
 }
@@ -26,13 +28,13 @@
     justify-content: center;
 }
 
-h1{
+.sign-up-div h1{
     font-size: 3rem;
     font-weight: 900;
     text-transform: uppercase;
 }
 
-form{
+.sign-up-div form{
     margin-top: 20px;
     margin-bottom: 50px;
     display: flex;
@@ -41,13 +43,13 @@ form{
     gap: 10px;
 }
 
-form>div{
+.sign-up-div form>div{
     width: 50vw;
     display: flex;
     justify-content: center;
 }
 
-form label{
+.sign-up-div form label{
     flex-shrink: 0;
     height: 50px;
     width: 50px;
@@ -60,8 +62,15 @@ form label{
     font-size: 1.5rem;
     font-weight: 500;
 }
+.sign-up-div form div.incorrect label{
+    background-color: #f06272;
+}
+.sign-up-div form div.incorrect input{
+    background-color: #ec8390;
+    border-color: #ec8390;
+}
 
-form input{
+.sign-up-div form input{
     box-sizing: border-box;
     flex-grow: 1;
     min-width: 0;
@@ -76,18 +85,20 @@ form input{
     transition: 150ms;
 }
 
-form input:hover{
+
+
+.sign-up-div form input:hover{
     border-color: var(--accent-color);
 }
-form input:focus{
+.sign-up-div form input:focus{
     outline: none;
     border-color: var(--text-color);
 }
-div:has(input:focus) > label{
+.sign-up-div div:has(input:focus) > label{
     background-color: var(--text-color);
 }
 
-form button{
+.sign-up-div form button{
     margin-top: 10px;
     border: none;
     border-radius: 1000px;
@@ -100,23 +111,21 @@ form button{
     cursor: pointer;
 }
 
-form button:hover{
+.sign-up-div form button:hover{
     background-color: var(--accent-color);
 }
-form button:focus{
+.sign-up-div form button:focus{
     outline: none;
     background-color: var(--text-color);
 }
-a{
+.sign-up-div a{
     text-decoration: none;
     color: var(--accent-color);
 }
-a:hover{
+.sign-up-div a:hover{
     text-decoration: underline;
 }
-.incorrect label{
-    background-color: #f06272;
-}
-form div.incorrect input{
-    background-color: #f06272;
+
+.sign-up-div #errors{
+    color: red;
 }

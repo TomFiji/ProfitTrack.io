@@ -19,63 +19,78 @@ function Signup() {
     const navigate = useNavigate();
 
     function addIncorrectClass(idName){
-        document.getElementById(idName).classList.add('incorrect')
+        document.getElementById(idName).parentElement.classList.add('incorrect')
     }
 
     function removeAllIncorrectClass(){
         const ids = ['first-name-input', 'last-name-input', 'email-input', 'password-input', 'repeat-password-input','site-password-input']
         for (var i=0; i<ids.length; i++){
-            document.getElementById(ids[i]).classList.remove('incorrect')
+            document.getElementById(ids[i]).parentElement.classList.remove('incorrect')
         }
     }
 
-    function handleErrors(firstname, lastname, email, password, repeatpassword, sitepassword){
+    function handleErrors(){
         let errors = []
-        if(firstname.trim()===''){
+        if(firstName.trim()===''){
             errors.push("First name is required")
             addIncorrectClass('first-name-input')
         }
-        if(lastname.trim()===''){
+        if(lastName.trim()===''){
             errors.push("Last name is required")
             addIncorrectClass('last-name-input')
         }
         if(email.trim()===''){
             errors.push("Email is required")
-            addIncorrectClass('email-name-input')
+            addIncorrectClass('email-input')
         }
-        if(password !== repeatpassword){
+        if(password !== repeatPassword){
             errors.push("Your passwords do not match")
             addIncorrectClass('password-input')
             addIncorrectClass('repeat-password-input')
         }
-        if(sitepassword != import.meta.env.VITE_SITE_PASSWORD){
+        if(sitePassword !== import.meta.env.VITE_SITE_PASSWORD){
             errors.push("Access denied: Incorrect Site Password")
             addIncorrectClass('site-password-input')
         }
         document.getElementById('errors').innerText = errors.join('. ')
-        return
+        console.log(errors)
+        return errors.length
+        
 
     }
     
 
     const handleSignup = async(e) => {
         e.preventDefault();
-        //removeAllIncorrectClass()
+        setLoading(true);
+        setError(null);
+        removeAllIncorrectClass()
 
-        handleErrors(firstName, lastName, email, password, repeatPassword, sitePassword)
+        if(handleErrors()>0){
+            console.log("You should not be seeing this")
+            setLoading(false)
+            return
+        }
 
-        const { data, error } = await supabase.auth.signup({
-            email: email,
-            password: password
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    first_name: firstName,
+                    last_name: lastName
+                }
+            }
         })
-        if (error) {throw error}
-        await supabase
-            .from('profiles')
-            .eq('id', data.user.id)
-            .update({
-                first_name: firstName,
-                last_name: lastName
-            })
+        setLoading(false);
+
+        if (error) {
+            setError(error.message)
+        }
+        else if (data.user){
+            navigate('/');
+        }
+    
         
     }
 
