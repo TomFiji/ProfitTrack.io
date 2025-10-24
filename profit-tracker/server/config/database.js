@@ -1,12 +1,3 @@
-import pg from "pg";
-const { Pool } = pg;
+import supabase from './supabase.js';
 
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'eBay_Expenses',
-  password: '1234',
-  port: 5432,
-});
-
-export default pool;
+export default supabase;

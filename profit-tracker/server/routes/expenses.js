@@ -1,15 +1,22 @@
 import express from 'express'
-import pool from '../config/database.js'
+import supabase from '../config/supabase.js'
+import { authenticateUser } from '../middleware/auth.js';
 const router = express.Router()
 
 const date = new Date();
+const today = `${date.getFullYear()}-${String(date.getMonth()+1)}-${String(date.getDate())}`
+const first_day_month = `${date.getFullYear()}-${String(date.getMonth()+1)}-01`
 
 
 //GET ALL EXPENSES
-router.get('/', async(req, res) => {
+router.get('/', authenticateUser, async(req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM expenses ORDER BY expense_date DESC');
-        res.json(result.rows);
+        const { data, error } = await supabase
+            .from('expenses')
+            .select('*')
+            .eq('user_id', req.user.id)
+        if (error) { throw error || "Could not retrieve all expenses"}
+        res.json(data) 
     }catch(error){
         console.error('Error fetching expenses:', error);
         res.status(500).json({ error: 'Database error' });
@@ -17,7 +24,7 @@ router.get('/', async(req, res) => {
 })
 
 //CREATE NEW EXPENSE
-router.post('/', async(req, res) => {
+router.post('/', authenticateUser, async(req, res) => {
     const { category, description, expense_date, amount } = req.body
 
     if(!category || !description || !expense_date || !amount) {
@@ -25,11 +32,17 @@ router.post('/', async(req, res) => {
     }
 
     try{
-        const result = await pool.query(
-            'INSERT INTO expenses (category, description, expense_date, amount) VALUES ($1, $2, $3, $4) RETURNING *',
-            [category, description, expense_date, amount]
-        );
-        res.status(201).json(result.rows[0]);
+        const { data, error } = await supabase
+            .from('expenses')
+            .insert({
+                user_id: req.user.id,
+                category: category,
+                description: description,
+                expense_date: expense_date,
+                amount: amount
+            })
+        if (error) { throw error || "Could not add expense"}
+        res.status(201).json(data);
     } catch(err){
         console.error(err);
         res.status(500).json({ error: 'Database error'});
@@ -37,10 +50,15 @@ router.post('/', async(req, res) => {
 })
 
 //GET TOTAL SUM OF ALL EXPENSES
-router.get('/total', async(req, res) => {
+router.get('/total', authenticateUser, async(req, res) => {
     try {
-        const total = await pool.query('SELECT SUM(amount) AS total_amount FROM expenses');
-        res.json({total: total.rows[0].total_amount || 0});
+        const { data, error } = await supabase
+            .from('expenses')
+            .select('amount.sum()')
+            .eq('user_id', req.user.id)
+
+        if (error) { throw error || "Could not retrieve expenses total"}
+        res.json(data[0]?.sum || 0);
     }catch(error){
         console.error('Error fetching total:', error);
         res.status(500).json({ error: 'Database error' });
@@ -48,10 +66,17 @@ router.get('/total', async(req, res) => {
 })
 
 //GET THIS MONTH'S TOTAL SUM OF EXPENSES
-router.get('/monthly-total', async(req, res) => {
+router.get('/monthly-total', authenticateUser, async(req, res) => {
     try {
-        const total = await pool.query(`SELECT SUM(amount) AS monthly_total_amount FROM expenses WHERE EXTRACT(MONTH FROM expense_date) = ${date.getMonth()+1}`);
-        res.json({total: total.rows[0].monthly_total_amount || 0});
+        const { data, error } = await supabase
+            .from('expenses')
+            .select('sum(amount)')
+            .gte('expense_date', first_day_month)
+            .lte('expense_date', today)
+            .eq('user_id', req.user.id)
+        
+        if (error) { throw error }
+        res.json(data[0]?.sum || 0);
     }catch(error){
         console.error('Error fetching total:', error);
         res.status(500).json({ error: 'Database error' });
@@ -59,11 +84,17 @@ router.get('/monthly-total', async(req, res) => {
 })
 
 //DELETE EXPENSE FROM THE DATABASE
-router.delete('/:id', async(req, res) =>{
+router.delete('/:id', authenticateUser, async(req, res) =>{
     const id = parseInt(req.params.id, 10)
     if (Number.isNaN(id)){return res.status(400).json({ error: 'Invalid expense id' })}
     try {
-        await pool.query('DELETE FROM expenses WHERE id = $1', [id]);
+        const { error } = await supabase
+            .from('expenses')
+            .delete() 
+            .eq('user_id', req.user.id)
+            .eq('id', id)
+               
+        if (error) { throw error }
         res.json({ message: 'Expense deleted successfully' })
     }catch(error){
         console.error('Error deleting expense:', error);
@@ -73,55 +104,50 @@ router.delete('/:id', async(req, res) =>{
 
 
 //Filter through expenses
-router.get("/filter", async (req, res) => {
+router.get("/filter", authenticateUser, async (req, res) => {
   const { categories, description, minPrice, maxPrice, startDate, endDate } = req.query;
+    try {
+    let query = supabase
+        .from('expenses')
+        .select('*')
+        .eq('user_id', req.user.id)
 
-  let query = "SELECT * FROM expenses WHERE 1=1";
-  const params = [];
+    // Category
+    if (categories) {
+        const categoryArray = Array.isArray(categories)
+        ? categories
+        : categories.split(","); // if sent as comma-separated string
 
-  // Category
-  if (categories) {
-    const categoryArray = Array.isArray(categories)
-      ? categories
-      : categories.split(","); // if sent as comma-separated string
+        // Example: ['Food', 'Supplies'] → $1, $2
+        query = query.in('category', categoryArray)
+    }
 
-    // Example: ['Food', 'Supplies'] → $1, $2
-    const placeholders = categoryArray.map((_, i) => `$${params.length + i + 1}`).join(", ");
-    query += ` AND category IN (${placeholders})`;
-    params.push(...categoryArray);
-  }
+    // Description (case-insensitive search)
+    if (description) {
+        query = query.ilike('description', `%${description}%`)
+    }
 
-  // Description (case-insensitive search)
-  if (description) {
-    params.push(`%${description}%`);
-    query += ` AND description ILIKE $${params.length}`;
-  }
+    // Price range
+    if (minPrice) {
+        query = query.gte('amount', minPrice)
+    }
+    if (maxPrice) {
+        query = query.lte('amount', maxPrice)
+    }
 
-  // Price range
-  if (minPrice) {
-    params.push(minPrice);
-    query += ` AND amount >= $${params.length}`;
-  }
-  if (maxPrice) {
-    params.push(maxPrice);
-    query += ` AND amount <= $${params.length}`;
-  }
+    // Date range
+    if (startDate) {
+        query = query.gte('expense_date', startDate)
+    }
+    if (endDate) {
+        query = query.lte('expense_date', endDate)
+    }
 
-  // Date range
-  if (startDate) {
-    params.push(startDate);
-    query += ` AND expense_date >= $${params.length}`;
-  }
-  if (endDate) {
-    params.push(endDate);
-    query += ` AND expense_date <= $${params.length}`;
-  }
+    query = query.order('expense_date', {ascending: false})
 
-  query += " ORDER BY expense_date DESC";
-
-  try {
-    const result = await pool.query(query, params);
-    res.json(result.rows);
+    const { data, error } = await query;
+    if (error) {throw error}
+    res.json(data);
   } catch (err) {
     console.error("Error filtering expenses:", err);
     res.status(500).json({ error: "Database error" });
@@ -129,22 +155,32 @@ router.get("/filter", async (req, res) => {
 });
 
 //EDIT EXPENSE
-router.put('/:id', async(req,res) => {
-    const { id } = req.params;
+router.put('/:id', authenticateUser, async(req,res) => {
+    const { id } = parseInt(req.params);
     const { category, description, expense_date, amount } = req.body;
 
     try{
-        const result = await pool.query(
-            `UPDATE expenses
-            SET category = $1, description = $2, expense_date = $3, amount = $4
-            WHERE id = $5
-            RETURNING *`,
-            [category, description, expense_date, amount, id]
-        );
-        if (!result || !result.rowCount) {
+        const { data, error } = await supabase
+            .from('expenses')
+            .update({
+                category: category,
+                description: description,
+                expense_date: expense_date,
+                amount: amount
+            })
+            .eq('user_id', req.user.id)
+            .eq('id', id)
+            .select()
+            
+        
+        
+        if (error) {
+            throw error
+        }
+        if (!data || data.length === 0) {
             return res.status(404).json({ error: 'Expense not found' });
         }
-        res.json(result.rows[0])
+        res.json(data[0])
     }catch(err){
         console.error('Error updating expense:', err);
         res.status(500).json({ error: 'Database error' });
@@ -152,15 +188,13 @@ router.put('/:id', async(req,res) => {
 })
 
 //GET SUM OF EXPENSES FROM EACH MONTH
-router.get('/monthly', async(req,res) => {
+router.get('/monthly', authenticateUser, async(req,res) => {
     try{
-        const result = await pool.query(
-            `SELECT TO_CHAR(expense_date, 'MM') AS month, 
-            SUM(amount) AS total_expenses 
-            FROM expenses 
-            GROUP BY month 
-            ORDER BY month`)
-        res.json(result.rows)    
+        const { data, error } = await supabase
+            .rpc('get_monthly_expenses', { user_id_param: req.user.id })
+            
+        if (error) { throw error; }
+        res.json(data)    
     }catch(err){
         console.log("Error getting expenses by month: ", err)
         res.status(500).json({ error: 'Database error' });

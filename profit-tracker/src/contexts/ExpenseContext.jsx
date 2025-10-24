@@ -1,4 +1,5 @@
-import {createContext, useState, useContext, useEffect, useCallback} from "react"
+import {createContext, useState, useContext, useEffect, useCallback} from "react";
+import { supabase } from '../components/config/supabase.js';
 
 const ExpenseContext = createContext();
 
@@ -150,7 +151,13 @@ export const ExpenseProvider = ({children}) => {
     
     const fetchExpenses = async () => {
         try{
-            const response = await fetch('http://localhost:5000/expenses');
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) throw new Error('No active session');
+            const response = await fetch('http://localhost:5000/expenses', {
+                headers: {
+                    'Authorization': `Bearer ${session.access_token}`
+                }
+            });
             if(!response.ok) throw new Error('Failed to fetch expenses');
             const data = await response.json();
             setExpenses(data);
