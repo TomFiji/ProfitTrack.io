@@ -6,6 +6,7 @@ import Analytics from './pages/Analytics';
 import SignupPage from './pages/Signup';
 import SigninPage from './pages/Signin_Page';
 import Header from './components/Header'
+import ProtectedRoute from './components/ProtectedRoute';
 import {Routes, Route, useLocation} from 'react-router-dom';
 import "./css/App.css"
 import { ExpenseProvider } from './contexts/ExpenseContext';
@@ -26,11 +27,10 @@ function App() {
           {shouldShowHeader && <Header />}
           <main className="main-content">
             <Routes>
-              
-              <Route path="/" element={<Home />}/>
-              <Route path="/expenses" element={<Expenses />}/>
-              <Route path="/filter" element={<Filter />}/>
-              <Route path="/analytics" element={<Analytics />}/>
+              <Route path="/" element={<ProtectedRoute>{<Home />}</ProtectedRoute>}/>
+              <Route path="/expenses" element={<ProtectedRoute>{<Expenses />}</ProtectedRoute>}/>
+              <Route path="/filter" element={<ProtectedRoute>{<Filter />}</ProtectedRoute>}/>
+              <Route path="/analytics" element={<ProtectedRoute>{<Analytics />}</ProtectedRoute>}/>
               <Route path="/signup" element={<SignupPage />}/>
               <Route path="/signin" element={<SigninPage />}/>
             </Routes>
