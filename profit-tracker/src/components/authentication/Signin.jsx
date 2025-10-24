@@ -3,6 +3,7 @@ import { supabase } from '../config/supabase.js';
 import { useNavigate, Link } from 'react-router-dom';
 import LockLogo from '../../assets/lock.svg'
 import EmailLogo from '../../assets/email_symbol.svg'
+import ProfitTrackLogo from '../../assets/profittrack-logo.svg'
 
 
 function Signin(){
@@ -44,6 +45,7 @@ function Signin(){
 
     return(
             <div className='body'>
+                <img class='logo' src={ProfitTrackLogo} />
                 <div className='sign-up-div'>
                     <h1>Log in</h1>
                     <form onSubmit={handleSignin} className='sign-up'>

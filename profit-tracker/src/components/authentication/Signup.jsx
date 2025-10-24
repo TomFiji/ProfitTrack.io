@@ -5,6 +5,7 @@ import PersonLogo from '../../assets/person.svg'
 import LockLogo from '../../assets/lock.svg'
 import EmailLogo from '../../assets/email_symbol.svg'
 import LockOpenLogo from '../../assets/lock_open.svg'
+import ProfitTrackLogo from '../../assets/profittrack-logo.svg'
 import '../../css/Signup.css'
 
 function Signup() {
@@ -96,6 +97,7 @@ function Signup() {
 
     return(
         <div className='body'>
+            <img className='logo' src={ProfitTrackLogo}/>
             <div className='sign-up-div'>
                 <h1>Signup</h1>
                 <form onSubmit={handleSignup} className='sign-up'>

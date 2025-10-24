@@ -5,8 +5,8 @@ import Filter from './pages/Filter'
 import Analytics from './pages/Analytics';
 import SignupPage from './pages/Signup';
 import SigninPage from './pages/Signin_Page';
+import Header from './components/Header'
 import {Routes, Route, useLocation} from 'react-router-dom';
-import NavbarMinimal from "./components/Sidebar"
 import "./css/App.css"
 import { ExpenseProvider } from './contexts/ExpenseContext';
 import '@mantine/core/styles.css';
@@ -17,13 +17,13 @@ function App() {
   const location = useLocation();
   
   // Pages where navbar should be hidden
-  const hideNavbarRoutes = ['/signup', '/signin'];
-  const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname);
+  const hideHeaderRoutes = ['/signup', '/signin'];
+  const shouldShowHeader = !hideHeaderRoutes.includes(location.pathname);
   return(
     <MantineProvider>
       <ExpenseProvider>
         <div className="app-shell">
-          {shouldShowNavbar && <NavbarMinimal />}
+          {shouldShowHeader && <Header />}
           <main className="main-content">
             <Routes>
               

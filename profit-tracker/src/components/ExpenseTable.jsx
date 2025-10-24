@@ -132,7 +132,7 @@ function ExpenseTable({ filteredExpenses = [] }) {
   ));
 
   return (
-    <ScrollArea h="100vh" onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+    <ScrollArea h="74vh" onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
       <Table miw={700}>
         <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
           <Table.Tr>

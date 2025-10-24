@@ -7,10 +7,10 @@
   flex-direction: column;
 }
 
-/* App shell: sidebar + main content */
+/* App shell: header + main content */
 .app-shell {
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
   min-height: 100vh;
 }
 
