@@ -4,7 +4,8 @@ import { authenticateUser } from '../middleware/auth.js';
 const router = express.Router()
 
 const date = new Date();
-const today = `${date.getFullYear()}-${String(date.getMonth()+1)}-${String(date.getDate())}`
+var next_month = ((date.getMonth() + 2) % 12) || 12;
+const first_day_next_month = `${date.getFullYear()}-${String(next_month)}-01`
 const first_day_month = `${date.getFullYear()}-${String(date.getMonth()+1)}-01`
 
 
@@ -14,6 +15,7 @@ router.get('/', authenticateUser, async(req, res) => {
         const { data, error } = await supabase
             .from('expenses')
             .select('*')
+            .order('expense_date', {ascending: false})
             .eq('user_id', req.user.id)
         if (error) { throw error || "Could not retrieve all expenses"}
         res.json(data) 
@@ -41,8 +43,9 @@ router.post('/', authenticateUser, async(req, res) => {
                 expense_date: expense_date,
                 amount: amount
             })
+            .select()
         if (error) { throw error || "Could not add expense"}
-        res.status(201).json(data);
+        res.status(201).json(data[0]);
     } catch(err){
         console.error(err);
         res.status(500).json({ error: 'Database error'});
@@ -54,11 +57,12 @@ router.get('/total', authenticateUser, async(req, res) => {
     try {
         const { data, error } = await supabase
             .from('expenses')
-            .select('amount.sum()')
+            .select('amount')
             .eq('user_id', req.user.id)
 
         if (error) { throw error || "Could not retrieve expenses total"}
-        res.json(data[0]?.sum || 0);
+        const total = data.reduce((sum, expense) => sum + expense.amount, 0)
+        res.json(total);
     }catch(error){
         console.error('Error fetching total:', error);
         res.status(500).json({ error: 'Database error' });
@@ -70,13 +74,14 @@ router.get('/monthly-total', authenticateUser, async(req, res) => {
     try {
         const { data, error } = await supabase
             .from('expenses')
-            .select('sum(amount)')
+            .select('amount')
             .gte('expense_date', first_day_month)
-            .lte('expense_date', today)
+            .lt('expense_date', first_day_next_month)
             .eq('user_id', req.user.id)
         
         if (error) { throw error }
-        res.json(data[0]?.sum || 0);
+        const total = data.reduce((sum, expense) => sum + expense.amount, 0)
+        res.json(total);
     }catch(error){
         console.error('Error fetching total:', error);
         res.status(500).json({ error: 'Database error' });
@@ -156,7 +161,7 @@ router.get("/filter", authenticateUser, async (req, res) => {
 
 //EDIT EXPENSE
 router.put('/:id', authenticateUser, async(req,res) => {
-    const { id } = parseInt(req.params);
+    const { id } = req.params;
     const { category, description, expense_date, amount } = req.body;
 
     try{

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '../config/supabase.js';
 import { useNavigate, Link } from 'react-router-dom';
+import { useExpenseContext } from '../../contexts/ExpenseContext.jsx';
 import LockLogo from '../../assets/lock.svg'
 import EmailLogo from '../../assets/email_symbol.svg'
 import ProfitTrackLogo from '../../assets/profittrack-logo.svg'
@@ -17,6 +18,8 @@ function Signin(){
     function addIncorrectClass(idName){
         document.getElementById(idName).parentElement.classList.add('incorrect')
     }
+
+    const { refreshExpenses } = useExpenseContext()
 
 
     const handleSignin = async(e) => {
@@ -37,6 +40,7 @@ function Signin(){
             document.getElementById('errors').innerText = err
         }
         else if (data.user){
+            refreshExpenses()
             navigate('/');
         }
     

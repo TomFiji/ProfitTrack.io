@@ -4,6 +4,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from '../css/Header.module.css';
 import React from 'react';
+import { supabase } from './config/supabase'
 import ProfitTrackLogo from '../assets/profittrack-text-only.svg'
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -12,6 +13,10 @@ const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosu
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const theme = useMantineTheme();
 
+  async function signOut() {
+  const { error } = await supabase.auth.signOut()
+  if (error) { throw error }
+}
 
   return (
     <Box pb={0}>
@@ -36,7 +41,7 @@ const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosu
 
           <Group visibleFrom="sm">
             <Button>Connect eBay</Button>
-            <Button variant="default">Log out</Button>
+            <Button variant="default" onClick={signOut}>Log out</Button>
           </Group>
 
           <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
@@ -72,7 +77,7 @@ const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosu
 
           <Group justify="center" grow pb="xl" px="md">
             <Button>Connect eBay</Button>
-            <Button variant="default">Log out</Button>
+            <Button variant="default" onClick={signOut}>Log out</Button>
           </Group>
         </ScrollArea>
       </Drawer>

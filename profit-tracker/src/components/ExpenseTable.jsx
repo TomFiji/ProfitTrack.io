@@ -120,8 +120,8 @@ function ExpenseTable({ filteredExpenses = [] }) {
         <>
           <Table.Td>{expense.category}</Table.Td>
           <Table.Td>{expense.description}</Table.Td>
-          <Table.Td>${expense.amount}</Table.Td>
-          <Table.Td>{format(new Date(expense.expense_date), 'MM/dd/yyyy')}</Table.Td>
+          <Table.Td>${expense.amount.toFixed(2)}</Table.Td>
+          <Table.Td>{format(new Date(expense.expense_date + 'T12:00:00'), 'MM/dd/yyyy')}</Table.Td>
           <Table.Td>
             <Button onClick={() => startEditing(expense)} variant="filled" size="md">Edit</Button>
             <Button onClick={() => handleDelete(expense.id)} variant="filled" color="rgba(247, 45, 45, 1)" size="md">Delete</Button>

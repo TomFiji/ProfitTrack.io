@@ -74,9 +74,14 @@ export const ExpenseProvider = ({children}) => {
         }
 
         try{
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) throw new Error('No active session');
             const response = await fetch('http://localhost:5000/expenses', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session.access_token}`
+                },
                 body:JSON.stringify(payload)
             })
 
@@ -101,10 +106,14 @@ export const ExpenseProvider = ({children}) => {
             if (!updatedExpense || !updatedExpense.id) {
                 throw new Error('Invalid expense payload: missing id');
             }
-
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) throw new Error('No active session');
             const response = await fetch(`http://localhost:5000/expenses/${updatedExpense.id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${session.access_token}`
+                },
                 body: JSON.stringify(updatedExpense)
             });
 
@@ -137,8 +146,13 @@ export const ExpenseProvider = ({children}) => {
 
     const handleDelete = async (id) => {
        try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) throw new Error('No active session');
         await fetch(`http://localhost:5000/expenses/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${session.access_token}`
+            }
         });
         setExpenses(prev => prev.filter(exp => exp.id !== id));
         setFilteredExpenses(prev => prev.filter(exp => exp.id !== id))
@@ -154,9 +168,7 @@ export const ExpenseProvider = ({children}) => {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
             const response = await fetch('http://localhost:5000/expenses', {
-                headers: {
-                    'Authorization': `Bearer ${session.access_token}`
-                }
+                headers: { 'Authorization': `Bearer ${session.access_token}` }
             });
             if(!response.ok) throw new Error('Failed to fetch expenses');
             const data = await response.json();
@@ -168,11 +180,15 @@ export const ExpenseProvider = ({children}) => {
 
     const fetchTotalExpenseAmount = async () => {
         try{
-            const response = await fetch('http://localhost:5000/expenses/total');
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) throw new Error('No active session');
+            const response = await fetch('http://localhost:5000/expenses/total', {
+                headers: { 'Authorization': `Bearer ${session.access_token}` }
+            });
+            
             if(!response.ok) throw new Error('Failed to fetch expenses');
             const data = await response.json();
-            const normalized = data && (data.total ?? 0);
-            setTotalExpenseAmount(Number(normalized) || 0)
+            setTotalExpenseAmount(data)
         }catch(error){
             console.error('Error fetching total amount of expenses:', error)
         }
@@ -180,11 +196,14 @@ export const ExpenseProvider = ({children}) => {
 
     const fetchMonthlyExpenseAmount = async () => {
         try{
-            const response = await fetch('http://localhost:5000/expenses/monthly-total');
-            if(!response.ok) throw new Error('Failed to fetch expenses');
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) throw new Error('No active session');
+            const response = await fetch('http://localhost:5000/expenses/monthly-total', {
+                headers: { 'Authorization': `Bearer ${session.access_token}` }
+            });
+            if(!response.ok) throw new Error('Failed to fetch monthly expenses');
             const data = await response.json();
-            const normalized = data && (data.total ?? 0);
-            setMonthlyExpenseAmount(Number(normalized) || 0)
+            setMonthlyExpenseAmount(data)
         }catch(error){
             console.error('Error fetching total amount of expenses:', error)
         }
@@ -199,7 +218,11 @@ export const ExpenseProvider = ({children}) => {
         const params = new URLSearchParams(
             Object.entries(filters).filter(([_, v]) => v !== "")
         );
-        const res = await fetch(`http://localhost:5000/expenses/filter?${params.toString()}`);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) throw new Error('No active session');
+        const res = await fetch(`http://localhost:5000/expenses/filter?${params.toString()}`, {
+            headers: { 'Authorization': `Bearer ${session.access_token}` }
+        });
         const data = await res.json();
         setFilteredExpenses(data);
         // Compute total for the newly fetched filtered data immediately
@@ -228,7 +251,8 @@ export const ExpenseProvider = ({children}) => {
         addExpense,
         handleEditSubmit,
         handleDelete,
-        fetchFilteredExpenses
+        fetchFilteredExpenses,
+        refreshExpenses
     }
 
     useEffect(() => {
