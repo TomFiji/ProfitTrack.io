@@ -1,6 +1,7 @@
 import { useState, useEffect,} from "react";
 import { Paper, Text } from '@mantine/core';
 import { LineChart } from '@mantine/charts';
+import { supabase } from "./config/supabase";
 
 function MonthlyLineChart({ height = 400, width = "40vw" }){
     const [monthlyPayoutTotals, setMonthlyPayoutTotals] = useState([])
@@ -13,8 +14,14 @@ function MonthlyLineChart({ height = 400, width = "40vw" }){
     
 
     const fetchAllMonthlyPayouts = async (req, res) => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) throw new Error('No active session');
         try {
-            const res = await fetch("http://localhost:5000/api/ebay/payouts");
+            const res = await fetch("http://localhost:5000/api/ebay/payouts", {
+                headers: {'Authorization': `Bearer ${session.access_token}`}
+            });
+
+            if (!res.ok) throw new Error('Failed to fetch gross payout');
 
             const data = await res.json();
 
@@ -39,10 +46,14 @@ function MonthlyLineChart({ height = 400, width = "40vw" }){
     }
 
     const fetchExpensesByMonth = async (req, res) => {
-        try{
-            const response = await fetch('http://localhost:5000/expenses/monthly');
-            if(!response.ok) throw new Error('Failed to fetch expenses');
-            const data = await response.json();
+        const { data: { session } } = await supabase.auth.getSession();
+            if (!session) throw new Error('No active session');
+            try {
+                const res = await fetch("http://localhost:5000/api/ebay/payouts", {
+                    headers: {'Authorization': `Bearer ${session.access_token}`}
+                });
+            if(!res.ok) throw new Error('Failed to fetch expenses');
+            const data = await res.json();
            const formatted = data.map(r => ({
                 month: r.month,
                 total_expenses: parseFloat(r.total_expenses)

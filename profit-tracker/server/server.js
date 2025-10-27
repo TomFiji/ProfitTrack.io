@@ -11,7 +11,12 @@ const PORT = process.env.PORT || 5000
 
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://cristen-cognitional-logarithmically.ngrok-free.dev",
+      "http://localhost:5000",
+      "https://auth.ebay.com"
+    ],
     credentials: true
 }))
 

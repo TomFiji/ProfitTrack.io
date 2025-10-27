@@ -6,17 +6,33 @@ import classes from '../css/Header.module.css';
 import React from 'react';
 import { supabase } from './config/supabase'
 import ProfitTrackLogo from '../assets/profittrack-text-only.svg'
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, redirect } from 'react-router-dom';
 
 function Header() {
-const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
-  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
-  const theme = useMantineTheme();
-
+  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
+  const navigate = useNavigate()
+  
   async function signOut() {
-  const { error } = await supabase.auth.signOut()
-  if (error) { throw error }
-}
+    const { error } = await supabase.auth.signOut()
+    if (error) { 
+      console.log('Error signing out: ', error)
+      navigate("/signin")
+    }
+  }
+
+  async function connectEbayAccount() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) throw new Error('No active session');
+    const response = await fetch('http://localhost:5000/api/ebay/connect', {
+      headers: {
+          'Authorization': `Bearer ${session.access_token}`
+      }
+    })
+    const data = await response.json()
+    console.log(data)
+    window.location.href = data.authUrl
+
+  }
 
   return (
     <Box pb={0}>
@@ -40,7 +56,7 @@ const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosu
           </Group>
 
           <Group visibleFrom="sm">
-            <Button>Connect eBay</Button>
+            <Button onClick={connectEbayAccount}>Connect eBay</Button>
             <Button variant="default" onClick={signOut}>Log out</Button>
           </Group>
 

@@ -19,8 +19,14 @@ export const ExpenseProvider = ({children}) => {
     
 
     const fetchGrossPayout = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) throw new Error('No active session');
             try {
-                const res = await fetch("http://localhost:5000/api/ebay/payouts");
+                const res = await fetch("http://localhost:5000/api/ebay/payouts", {
+                    headers: {'Authorization': `Bearer ${session.access_token}`}
+                });
+
+                if (!res.ok) throw new Error('Failed to fetch gross payout');
 
                 const data = await res.json();
                 let grossPayout = 0;
@@ -28,32 +34,34 @@ export const ExpenseProvider = ({children}) => {
                 for (let i=0; i<data.payouts.length; i++){
                     grossPayout += parseFloat(data.payouts[i].amount.value);
                 }
-
-                setGrossPayout(grossPayout.toFixed(2));
+                console.log(data)
+                setGrossPayout(grossPayout);
             }catch(error){
                 setError('Failed to load payout data');
                 console.log(error);
-            }finally{
-                setLoading(false);
             }
         }
 
     const fetchMonthlyPayout = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) throw new Error('No active session');
             try {
-                const res = await fetch("http://localhost:5000/api/ebay/monthly-payouts");
+                const res = await fetch("http://localhost:5000/api/ebay/monthly-payouts", {
+                    headers: {'Authorization': `Bearer ${session.access_token}`}
+                });
+
+                if (!res.ok) throw new Error('Failed to fetch gross payout');
 
                 const data = await res.json();
-                let grossPayout = 0;
+                let total = 0;
 
                 for (let i=0; i<data.payouts.length; i++){
-                    grossPayout += parseFloat(data.payouts[i].amount.value);
+                    total += parseFloat(data.payouts[i].amount.value);
                 }
-                setMonthlyPayout(grossPayout.toFixed(2));
+                setMonthlyPayout(total);
             }catch(error){
                 setError('Failed to load payout data');
                 console.log(error);
-            }finally{
-                setLoading(false);
             }
         }    
     

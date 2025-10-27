@@ -6,15 +6,13 @@ import { authenticateUser } from '../middleware/auth.js';
 import { getValidAccessToken } from '../utils/ebayAuth.js';
 const router = express.Router()
 
-const BEARER_TOKEN = process.env.EBAY_BEARER_TOKEN
-
 const date = new Date();
 let currentDate = `${date.getFullYear()}-${date.getMonth() +1}-${date.getDate()}`;
 
 //Gets ebay payouts for the entire year and is used in fetchGrossPayouts()
 router.get("/payouts", authenticateUser, async (req, res) => {
-    const access_token = getValidAccessToken(req.user.id)
     try{
+        const access_token = await getValidAccessToken(req.user.id)
         const response = await axios.get(`https://apiz.ebay.com/sell/finances/v1/payout?filter=payoutDate:[${date.getFullYear()}-1-1T00:00:01.000Z..${currentDate}T00:00:01.000Z]&limit=200&offset=0`, {
             headers: {
                 Authorization: `Bearer ${access_token}`,
@@ -32,7 +30,7 @@ router.get("/payouts", authenticateUser, async (req, res) => {
 //Gets ebay payout for the total month to calculate monthly profit
 router.get("/monthly-payouts", authenticateUser, async (req, res) => {
     try{
-        const access_token = getValidAccessToken(req.user.id)
+        const access_token = await getValidAccessToken(req.user.id)
         const response = await axios.get(`https://apiz.ebay.com/sell/finances/v1/payout?filter=payoutDate:[${date.getFullYear()}-${date.getMonth() +1}-1T00:00:01.000Z..${currentDate}T00:00:01.000Z]&limit=200&offset=0`, {
             headers: {
                 Authorization: `Bearer ${access_token}`,
