@@ -22,7 +22,7 @@ router.get("/payouts", authenticateUser, async (req, res) => {
     res.json(response.data);
     
     } catch (error){
-        console.log("eBay API error: ", error.response?.data || error.message);
+        console.log("eBay API error with payouts: ", error.response?.data || error.message);
         res.status(500).json({ error: "Failed to fetch data from eBay" });
     }
 })
@@ -39,7 +39,7 @@ router.get("/monthly-payouts", authenticateUser, async (req, res) => {
         });
     res.json(response.data);
     } catch (error){
-        console.log("eBay API error: ", error.response?.data || error.message);
+        console.log("eBay API error with monthly payouts: ", error.response?.data || error.message);
         res.status(500).json({ error: "Failed to fetch data from eBay" });
     }
 })

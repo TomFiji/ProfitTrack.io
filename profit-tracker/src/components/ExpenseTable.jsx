@@ -18,7 +18,7 @@ function ExpenseTable({ filteredExpenses = [] }) {
 
   const { allExpenses, handleEditSubmit, handleDelete } = useExpenseContext()
 
-  const expenseTypes = ['Thrift Store', 'Online Arbitrage', 'Supplies', 'Food', 'Miscellaneous'].map(
+  const expenseTypes = ['Thrift Store', 'Online Arbitrage', 'Retail Arbitrage', 'Supplies', 'Employees', 'Food', 'Miscellaneous'].map(
         item => ({ label:item, value:item})
     )
 
@@ -132,7 +132,7 @@ function ExpenseTable({ filteredExpenses = [] }) {
   ));
 
   return (
-    <ScrollArea h="74vh" onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+    <ScrollArea h="77vh" onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
       <Table miw={700}>
         <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
           <Table.Tr>

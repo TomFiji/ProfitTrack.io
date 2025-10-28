@@ -3,7 +3,7 @@ import { Paper, Text } from '@mantine/core';
 import { LineChart } from '@mantine/charts';
 import { supabase } from "./config/supabase";
 
-function MonthlyLineChart({ height = 400, width = "40vw" }){
+function MonthlyLineChart({ height = "40vh", width = "40vw" }){
     const [monthlyPayoutTotals, setMonthlyPayoutTotals] = useState([])
     const [monthlyExpenseTotals, setMonthlyExpenseTotals] = useState([])
     const [data, setData] = useState([])
@@ -166,7 +166,7 @@ function MonthlyLineChart({ height = 400, width = "40vw" }){
             content: CustomTooltip
             }}
             tooltipAnimationDuration={0}
-            yAxisProps={{ domain: [0, 12000]}}
+            //yAxisProps={{ domain: [0, 12000]}}
         />
     )
 }

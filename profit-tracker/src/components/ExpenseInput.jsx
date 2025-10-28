@@ -16,7 +16,7 @@ function ExpenseInput() {
     const { addExpense } = useExpenseContext()
 
 
-    const expenseTypes = ['Thrift Store', 'Online Arbitrage', 'Supplies', 'Food', 'Miscellaneous'].map(
+    const expenseTypes = ['Thrift Store', 'Online Arbitrage', 'Retail Arbitrage', 'Supplies', 'Employees', 'Food', 'Miscellaneous'].map(
         item => ({ label:item, value:item})
     )
 

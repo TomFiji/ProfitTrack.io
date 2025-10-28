@@ -1,0 +1,51 @@
+.expense-filter-form{
+    margin-right: 200px;
+}
+
+.expense-filter-form .category-description{
+    display: flex;
+    flex-direction: row;
+}
+
+.expense-filter-form .multiselect {
+    background-color: white;
+    border: none;
+}
+
+.expense-filter-form .multiselect:focus{
+    outline: none;
+    border-color: black;
+}
+
+.expense-filter-form input{
+    background-color: #bbe3fd;
+    color: black;
+    padding: 2px 5px;
+    border-radius: 5px;
+    border: 2px solid var(--input-color);
+    margin: 2px 5px;
+}
+
+.expense-filter-form input:hover{
+    border-color: var(--text-color);
+}
+
+.expense-filter-form input:focus{
+    border-color: black;
+    outline: none;
+}
+
+.expense-filter-form button{
+    background-color: var(--accent-color);
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+.expense-filter-form button:hover{
+    background-color: #0797b4;
+}
+
+.description-input{
+    width: 20vw;
+}
+

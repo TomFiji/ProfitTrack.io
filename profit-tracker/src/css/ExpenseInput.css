@@ -1,18 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root{
+    --base-color: white;
+    --accent-color: #00B4D8;
+    --text-color: #03045E;
+    --input-color: #c1d8e7;
+}
+
 .expense-form-div{
     display: flex;
     margin-left: 5em;
     margin-bottom: 30px;
+    
 }
 
 label{
     margin-left: 10px;
+    font-family: Poppins, Segoe UI, sans-serif;
 }
 
 .submit-button{
-    background-color: rgb(0, 192, 217);
+    background-color: var(--accent-color);
     margin-left: 20px;
+}
+
+.submit-button:hover{
+    background-color: #0797b4;
+}
+
+.expense-type{
+    background-color: #bbe3fd;
+    color: black;
+    padding: 2px 5px;
+    border-radius: 5px;
+    border: 2px solid var(--input-color);
+}
+
+.expense-type:hover{
+    border-color: var(--accent-color);
+}
+.expense-type:focus{
+    outline: none;
+    border-color: var(--text-color);
 }
 
 .expense-name{
     width: 400px;
+    
+}
+
+.expense-cost{
+    
+}
+
+.expense-date{
+    
+}
+
+.expense-form-div input{
+    background-color: #bbe3fd;
+    color: black;
+    padding: 2px 5px;
+    border-radius: 5px;
+    border: 2px solid var(--input-color);
+}
+
+.expense-form-div form input:hover{
+    border-color: var(--accent-color);
+}
+.expense-form-div form input:focus{
+    outline: none;
+    border-color: var(--text-color);
 }

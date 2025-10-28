@@ -235,7 +235,6 @@ export const ExpenseProvider = ({children}) => {
         setFilteredExpenses(data);
         // Compute total for the newly fetched filtered data immediately
         fetchFilteredExpensesTotal(data);
-        console.log(data)
     };
 
     // Ensure filteredExpenseTotal always reflects the current filteredExpenses

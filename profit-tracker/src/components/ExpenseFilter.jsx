@@ -1,13 +1,17 @@
 import { useState } from "react";
+import { MultiSelect } from "@mantine/core";
+import '../css/ExpenseFilter.css'
 
 
 function ExpenseFilter({ onFilter }) {
 
     const expenseCategories = [
-    'Thrift Store',
-    'Online Arbitrage',
-    'Supplies',
-    'Food',
+    'Thrift Store', 
+    'Online Arbitrage', 
+    'Retail Arbitrage', 
+    'Supplies', 
+    'Employees', 
+    'Food', 
     'Miscellaneous'
 ]
 
@@ -20,17 +24,9 @@ function ExpenseFilter({ onFilter }) {
         endDate: '',
     });
 
-    const handleCategoryChange = (category) => {
-        setFilters((prev) => {
-            const alreadySelected = prev.categories.includes(category);
-            return{
-                ...prev,
-                categories: alreadySelected
-                ? prev.categories.filter((c) => c !== category)
-                : [...prev.categories, category] 
-            };
-        });
-    };
+    const handleCategoryChange = (selectedValues) => {
+        setFilters((prev) => ({ ...prev, categories: selectedValues }))
+    }
 
     const handleChange = (e) => {
        const { name, value } = e.target;
@@ -44,25 +40,26 @@ function ExpenseFilter({ onFilter }) {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <legend>Categories</legend>
-            {expenseCategories.map((cat) => (
-                <label key={cat}>
-                    <input
-                        type="checkbox"
-                        checked={filters.categories.includes(cat)}
-                        onChange={() => handleCategoryChange(cat)}
-                    />
-                    {cat}
-                </label>
-            ))}
+        <form class="expense-filter-form" onSubmit={handleSubmit}>
+        <div class='category-description'>
+            <MultiSelect 
+                class = "multiselect"
+                placeholder = 'Choose your categories'
+                data={expenseCategories}
+                onChange={handleCategoryChange}
+                clearable
+                w={"50%"}
+            />
             <input
                 type="text"
+                class="description-input"
                 name="description"
                 placeholder="Search description"
                 value={filters.description}
                 onChange={handleChange}
             />
+        </div>
+        <div> 
             <input
                 type="number"
                 name="minPrice"
@@ -94,6 +91,7 @@ function ExpenseFilter({ onFilter }) {
                 onChange={handleChange}
             />
             <button>Search</button>
+        </div>       
         </form>
         
     )
