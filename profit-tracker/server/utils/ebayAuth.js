@@ -14,7 +14,6 @@ export const getValidAccessToken = async(userId) => {
         if (!data) { console.log('eBay account not connected. Please connect your eBay account first')}
         const expiresAt = new Date(data.expires_at)
     if (expiresAt < new Date()){
-        console.log("New access token created")
         try{
             const credentials_encoded = Buffer.from(`${process.env.EBAY_CLIENT_ID}:${process.env.EBAY_CLIENT_SECRET}`).toString('base64')
 
@@ -53,7 +52,6 @@ export const getValidAccessToken = async(userId) => {
         }
     }
     else{
-        console.log("Old access token used");
         return data.access_token
     }
 }

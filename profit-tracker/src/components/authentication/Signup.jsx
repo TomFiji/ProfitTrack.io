@@ -80,16 +80,16 @@ function Signup() {
                 data: {
                     first_name: firstName,
                     last_name: lastName
-                }
+                },
+                emailRedirectTo: 'http://localhost:5173/'
             }
         })
         setLoading(false);
-
         if (error) {
             setError(error.message)
         }
-        else if (data.user){
-            navigate('/');
+        if (data.user){
+            navigate('/verify-email')
         }
     
         

@@ -270,6 +270,32 @@ export const ExpenseProvider = ({children}) => {
         fetchMonthlyExpenseAmount();
     }, [])
 
+    // Listen to auth changes and clear state on logout
+    useEffect(() => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_OUT') {
+                // Clear all state when user signs out
+                setExpenses([]);
+                setTotalExpenseAmount(0);
+                setMonthlyExpenseAmount(0);
+                setGrossPayout(0);
+                setMonthlyPayout(0);
+                setFilteredExpenses([]);
+                setFilteredExpeneseTotal(0);
+                setError(null);
+            } else if (event === 'SIGNED_IN' && session) {
+                // Refetch data when user signs in
+                fetchExpenses();
+                fetchGrossPayout();
+                fetchTotalExpenseAmount();
+                fetchMonthlyPayout();
+                fetchMonthlyExpenseAmount();
+            }
+        });
+
+        return () => subscription.unsubscribe();
+    }, [])
+
     return <ExpenseContext.Provider value={value}>
         {children}
     </ExpenseContext.Provider>

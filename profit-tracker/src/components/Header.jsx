@@ -14,8 +14,9 @@ function Header() {
   
   async function signOut() {
     const { error } = await supabase.auth.signOut()
-    if (error) { 
+    if (error) {
       console.log('Error signing out: ', error)
+    } else {
       navigate("/signin")
     }
   }
