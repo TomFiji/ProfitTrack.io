@@ -11,7 +11,7 @@ function Piechart() {
         const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
             try {
-                const res = await fetch("http://localhost:5000/expenses/categories", {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/expenses/categories`, {
                     headers: {'Authorization': `Bearer ${session.access_token}`}
                 });
             if(!res.ok) throw new Error('Failed to fetch expenses');

@@ -25,7 +25,7 @@ function Header() {
   async function connectEbayAccount() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) throw new Error('No active session');
-    const response = await fetch('http://localhost:5000/api/ebay/connect', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/ebay/connect`, {
       headers: {
           'Authorization': `Bearer ${session.access_token}`
       }

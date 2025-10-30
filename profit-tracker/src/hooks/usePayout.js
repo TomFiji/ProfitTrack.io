@@ -13,7 +13,7 @@ export const usePayout = () => {
 
     const fetchGrossPayout = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/ebay-payouts");
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/ebay-payouts`);
 
                 const data = await res.json();
                 console.log(data);

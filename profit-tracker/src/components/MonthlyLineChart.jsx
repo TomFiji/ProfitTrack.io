@@ -18,7 +18,7 @@ function MonthlyLineChart({ height = "40vh", width = "40vw" }){
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) throw new Error('No active session');
         try {
-            const response = await fetch("http://localhost:5000/api/ebay/payouts", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/ebay/payouts`, {
                 headers: {'Authorization': `Bearer ${session.access_token}`}
             });
 
@@ -49,7 +49,7 @@ function MonthlyLineChart({ height = "40vh", width = "40vw" }){
         const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
             try {
-                const res = await fetch("http://localhost:5000/expenses/monthly", {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/expenses/monthly`, {
                     headers: {'Authorization': `Bearer ${session.access_token}`}
                 });
             if(!res.ok) throw new Error('Failed to fetch expenses');

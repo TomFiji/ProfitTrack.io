@@ -22,7 +22,7 @@ export const ExpenseProvider = ({children}) => {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
             try {
-                const res = await fetch("http://localhost:5000/api/ebay/payouts", {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/ebay/payouts`, {
                     headers: {'Authorization': `Bearer ${session.access_token}`}
                 });
 
@@ -46,7 +46,7 @@ export const ExpenseProvider = ({children}) => {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
             try {
-                const res = await fetch("http://localhost:5000/api/ebay/monthly-payouts", {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/ebay/monthly-payouts`, {
                     headers: {'Authorization': `Bearer ${session.access_token}`}
                 });
 
@@ -84,7 +84,7 @@ export const ExpenseProvider = ({children}) => {
         try{
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
-            const response = await fetch('http://localhost:5000/expenses', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/expenses`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ export const ExpenseProvider = ({children}) => {
             }
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
-            const response = await fetch(`http://localhost:5000/expenses/${updatedExpense.id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/expenses/${updatedExpense.id}`, {
                 method: 'PUT',
                 headers: { 
                     'Content-Type': 'application/json', 
@@ -156,7 +156,7 @@ export const ExpenseProvider = ({children}) => {
        try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) throw new Error('No active session');
-        await fetch(`http://localhost:5000/expenses/${id}`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/expenses/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${session.access_token}`
@@ -175,7 +175,7 @@ export const ExpenseProvider = ({children}) => {
         try{
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
-            const response = await fetch('http://localhost:5000/expenses', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/expenses`, {
                 headers: { 'Authorization': `Bearer ${session.access_token}` }
             });
             if(!response.ok) throw new Error('Failed to fetch expenses');
@@ -190,7 +190,7 @@ export const ExpenseProvider = ({children}) => {
         try{
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
-            const response = await fetch('http://localhost:5000/expenses/total', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/expenses/total`, {
                 headers: { 'Authorization': `Bearer ${session.access_token}` }
             });
             
@@ -206,7 +206,7 @@ export const ExpenseProvider = ({children}) => {
         try{
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
-            const response = await fetch('http://localhost:5000/expenses/monthly-total', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/expenses/monthly-total`, {
                 headers: { 'Authorization': `Bearer ${session.access_token}` }
             });
             if(!response.ok) throw new Error('Failed to fetch monthly expenses');
@@ -228,7 +228,7 @@ export const ExpenseProvider = ({children}) => {
         );
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) throw new Error('No active session');
-        const res = await fetch(`http://localhost:5000/expenses/filter?${params.toString()}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/expenses/filter?${params.toString()}`, {
             headers: { 'Authorization': `Bearer ${session.access_token}` }
         });
         const data = await res.json();
