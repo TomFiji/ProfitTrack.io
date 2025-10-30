@@ -6,6 +6,8 @@ import Analytics from './pages/Analytics';
 import SignupPage from './pages/Signup';
 import SigninPage from './pages/Signin_Page';
 import VerifyEmailPage from './pages/VerifyEmail';
+import ForgotPasswordPage from './pages/ForgotPassword';
+import ConfirmPasswordsPage from './pages/ConfirmPasswords';
 import Header from './components/Header'
 import ProtectedRoute from './components/ProtectedRoute';
 import {Routes, Route, useLocation} from 'react-router-dom';
@@ -19,7 +21,7 @@ function App() {
   const location = useLocation();
   
   // Pages where navbar should be hidden
-  const showHeaderRoutes = ['/signup', '/signin', '/verify-email', '/error', '/forgot-password'];
+  const showHeaderRoutes = ['/signup', '/signin', '/verify-email', '/error', '/forgot-password', '/confirm-passwords'];
   const shouldShowHeader = !showHeaderRoutes.includes(location.pathname);
   return(
     <MantineProvider>
@@ -34,7 +36,9 @@ function App() {
               <Route path="/analytics" element={<ProtectedRoute>{<Analytics />}</ProtectedRoute>}/>
               <Route path="/signup" element={<SignupPage />}/>
               <Route path="/signin" element={<SigninPage />}/>
-              <Route path="/verify-email" element={<VerifyEmailPage />}/>
+              <Route path="/verify-email" element={<ProtectedRoute>{<VerifyEmailPage />}</ProtectedRoute>}/>
+              <Route path="/forgot-password" element={<ForgotPasswordPage />}/>
+              <Route path="/confirm-passwords" element={<ProtectedRoute>{<ConfirmPasswordsPage />}</ProtectedRoute>}/>
             </Routes>
           </main>
         </div>

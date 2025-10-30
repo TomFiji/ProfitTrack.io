@@ -5,6 +5,7 @@ import { useExpenseContext } from '../../contexts/ExpenseContext.jsx';
 import LockLogo from '../../assets/lock.svg'
 import EmailLogo from '../../assets/email_symbol.svg'
 import ProfitTrackLogo from '../../assets/profittrack-logo.svg'
+import '../../css/Signup.css'
 
 
 function Signin(){
@@ -81,7 +82,7 @@ function Signin(){
                         <p id="errors"></p>
                         <button type='submit'>Sign In</button>
                     </form>
-                    <p>Forgot your password? Click <Link to="/signup">here</Link></p>
+                    <p>Forgot your password? Click <Link to="/forgot-password">here</Link></p>
                     <p>Don't have an Account? <Link to="/signup">Signup</Link></p>
                 </div>
             </div>  

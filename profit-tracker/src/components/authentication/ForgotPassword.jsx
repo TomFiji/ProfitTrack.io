@@ -1,25 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../config/supabase";
+import EmailLogo from '../../assets/email_symbol.svg'
+import ProfitTrackLogo from '../../assets/profittrack-logo.svg'
+import '../../css/Signup.css'
+
 
 function ForgotPassword(){
-    const { data, error } = await supabase.auth  
-        .resetPasswordForEmail('user@email.com')
-        
-    /** * Step 2: Once the user is redirected back to your application, * ask the user to reset their password. */ 
-    useEffect(() => {   
-        supabase.auth.onAuthStateChange(async (event, session) => {     
-            if (event == "PASSWORD_RECOVERY") {       
-                const newPassword = prompt("What would you like your new password to be?");       
-                const { data, error } = await supabase.auth         
-                .updateUser({ password: newPassword })       
-                if (data) alert("Password updated successfully!")       
-                if (error) alert("There was an error updating your password.")     
-            }   
-        }) 
-    }, [])
+
+    const [email, setEmail] = useState("")
+
+    async function resetPassword(e) {
+        e.preventDefault()
+        await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: 'http://localhost:5173/confirm-passwords'
+        })
+    }    
 
     return(
-        <>
-        </>
+         <div className='body'>
+            <img class='logo' src={ProfitTrackLogo} />
+            <div className='sign-up-div'>
+                <h1>Reset your Password</h1>
+                <form onSubmit={resetPassword} className='sign-up'>
+                    <div>
+                        <label for="email-input"><img src={EmailLogo} alt="" style={{ width: 48, height: 24 }} /> </label>
+                        <input 
+                            type="email" 
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)} 
+                            required
+                            autocomplete="off"
+                            id='email-input'
+                            placeholder='Email'
+                        />
+                    </div>
+                    <button>Send Email</button>
+                </form>
+            </div>
+        </div>
     )
 }
+
+export default ForgotPassword
