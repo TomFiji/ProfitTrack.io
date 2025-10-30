@@ -1,12 +1,12 @@
 import ExpenseInput from "../components/ExpenseInput";
-import ExpensesTable from "../components/ExpenseTable";
+import ExpenseTable from "../components/ExpenseTable";
 
 
 function Expenses() {
     return (
         <>
             <ExpenseInput />
-            <ExpensesTable />
+            <ExpenseTable />
         </>
     )
 }
