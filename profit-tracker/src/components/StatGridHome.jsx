@@ -16,10 +16,10 @@ function StatsGridIcons() {
 
 
   const data = [
-    { title: 'Annual Profit', value: `$${netPayout.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: 34 },
-    { title: 'Annual Expenses', value: `$${totalExpenseAmount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: 34 },
-    { title: 'Monthly Profit', value: `$${netMonthlyPayout.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: -13 },
-    { title: 'Monthly Expenses', value: `$${monthlyExpenseAmount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: -13 },
+    { title: 'Annual Profit', value: `$${netPayout.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: 1 },
+    { title: 'Annual Expenses', value: `$${totalExpenseAmount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: -1 },
+    { title: 'Monthly Profit', value: `$${netMonthlyPayout.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: 1 },
+    { title: 'Monthly Expenses', value: `$${monthlyExpenseAmount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: -1 },
   ];
 
 
@@ -52,9 +52,7 @@ function StatsGridIcons() {
         </Group>
         <Text c="dimmed" fz="sm" mt="md">
           <Text component="span" c={stat.diff > 0 ? 'teal' : 'red'} fw={700}>
-            {stat.diff}%
-          </Text>{' '}
-          {stat.diff > 0 ? 'increase' : 'decrease'} compared to last {stat.title.includes("Annual") ? "year" : "month" }
+          </Text>
         </Text>
       </Paper>
     );
