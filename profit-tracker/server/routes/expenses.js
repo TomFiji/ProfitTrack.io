@@ -88,25 +88,6 @@ router.get('/monthly-total', authenticateUser, async(req, res) => {
     }
 })
 
-//DELETE EXPENSE FROM THE DATABASE
-router.delete('/:id', authenticateUser, async(req, res) =>{
-    const id = parseInt(req.params.id, 10)
-    if (Number.isNaN(id)){return res.status(400).json({ error: 'Invalid expense id' })}
-    try {
-        const { error } = await supabase
-            .from('expenses')
-            .delete() 
-            .eq('user_id', req.user.id)
-            .eq('id', id)
-               
-        if (error) { throw error }
-        res.json({ message: 'Expense deleted successfully' })
-    }catch(error){
-        console.error('Error deleting expense:', error);
-        res.status(500).json({ error: 'Database error' });
-    }
-});
-
 
 //Filter through expenses
 router.get("/filter", authenticateUser, async (req, res) => {
@@ -222,6 +203,26 @@ router.put('/:id', authenticateUser, async(req,res) => {
         res.status(500).json({ error: 'Database error' });
     }
 })
+
+
+//DELETE EXPENSE FROM THE DATABASE
+router.delete('/:id', authenticateUser, async(req, res) =>{
+    const id = parseInt(req.params.id, 10)
+    if (Number.isNaN(id)){return res.status(400).json({ error: 'Invalid expense id' })}
+    try {
+        const { error } = await supabase
+            .from('expenses')
+            .delete() 
+            .eq('user_id', req.user.id)
+            .eq('id', id)
+               
+        if (error) { throw error }
+        res.json({ message: 'Expense deleted successfully' })
+    }catch(error){
+        console.error('Error deleting expense:', error);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
 
 
 
