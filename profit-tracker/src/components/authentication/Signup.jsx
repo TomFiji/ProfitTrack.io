@@ -79,7 +79,7 @@ function Signup() {
                     first_name: firstName,
                     last_name: lastName
                 },
-                emailRedirectTo: import.meta.env.VITE_APP_URL
+                emailRedirectTo: `${import.meta.env.VITE_APP_URL}/verify-email`
             }
         })
         setLoading(false);
