@@ -54,7 +54,6 @@ function Signup() {
             addIncorrectClass('site-password-input')
         }
         document.getElementById('errors').innerText = errors.join('. ')
-        console.log(errors)
         return errors.length
         
 
@@ -68,7 +67,6 @@ function Signup() {
         removeAllIncorrectClass()
 
         if(handleErrors()>0){
-            console.log("You should not be seeing this")
             setLoading(false)
             return
         }
