@@ -123,13 +123,16 @@ router.get("/filter", authenticateUser, async (req, res) => {
         ? categories
         : categories.split(","); // if sent as comma-separated string
 
-        // Example: ['Food', 'Supplies'] → $1, $2
         query = query.in('category', categoryArray)
     }
 
     // Description (case-insensitive search)
     if (description) {
-        query = query.ilike('description', `%${description}%`)
+        const descriptionNoSpaces = description.replace(/, /g, ",");
+        const descriptions = descriptionNoSpaces.split(",")
+        const descriptionFilter = descriptions.map(d => `description.ilike.%${d}%`).join(',')
+        query = query.or(descriptionFilter)
+        
     }
 
     // Price range

@@ -151,7 +151,7 @@ function MonthlyLineChart({ height = "40vh", width = "40vw" }){
 
     return(
         <div className="linechart">
-            <h3>Expenses by Category</h3>
+            <h3>Profit by Month</h3>
             <LineChart
                 h={height}
                 w= {width}

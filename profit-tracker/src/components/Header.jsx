@@ -3,13 +3,14 @@ import { Anchor, Box, Burger, Button, Center, Collapse, Divider, Drawer, Group, 
 import { useDisclosure } from '@mantine/hooks';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from '../css/Header.module.css';
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from './config/supabase'
 import ProfitTrackLogo from '../assets/profittrack-text-only.svg'
 import { useNavigate, Link, redirect } from 'react-router-dom';
 
 function Header() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
+  const [isEbayConnected, setIsEbayConnected] = useState(null);
   const navigate = useNavigate()
   
   async function signOut() {
@@ -35,6 +36,28 @@ function Header() {
 
   }
 
+  async function checkEbayConnection() {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) return;
+
+    const { data, error } = await supabase
+      .from('ebay_connections')
+      .select('*')
+      .eq('user_id', session.user.id)
+
+    if (error) {
+      console.log('Error checking eBay connection:', error);
+      return;
+    }
+
+    setIsEbayConnected(data && data.length > 0);
+  }
+
+  useEffect(() => {
+          checkEbayConnection();
+          }, []);
+
   return (
     <Box pb={0}>
       <header className={classes.header}>
@@ -57,7 +80,9 @@ function Header() {
           </Group>
 
           <Group visibleFrom="sm">
-            <Button onClick={connectEbayAccount}>Connect eBay</Button>
+            {isEbayConnected === false && (
+              <Button id="ebay-button" onClick={connectEbayAccount}>Connect eBay</Button>
+            )}
             <Button variant="default" onClick={signOut}>Log out</Button>
           </Group>
 
@@ -93,7 +118,9 @@ function Header() {
           <Divider my="sm" />
 
           <Group justify="center" grow pb="xl" px="md">
-            <Button>Connect eBay</Button>
+            {isEbayConnected === false && (
+              <Button onClick={connectEbayAccount}>Connect eBay</Button>
+            )}
             <Button variant="default" onClick={signOut}>Log out</Button>
           </Group>
         </ScrollArea>
