@@ -99,10 +99,10 @@ router.get("/callback", async(req,res) =>{
                 onConflict: 'user_id'
            })
            if (error) throw error;
-           res.redirect('http://localhost:5173/?ebay_connected=true')
+           res.redirect(`${process.env.FRONTEND_URL}/?ebay_connected=true`)
     }catch(error){
         console.log("Error authenticating your ebay profile, ", error)
-        res.redirect('http://localhost:5173/error?message=Failed to connect eBay account')
+        res.redirect(`${process.env.FRONTEND_URL}/error?message=Failed to connect eBay account`)
     }
 })
 

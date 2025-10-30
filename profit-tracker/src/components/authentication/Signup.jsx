@@ -81,7 +81,7 @@ function Signup() {
                     first_name: firstName,
                     last_name: lastName
                 },
-                emailRedirectTo: 'http://localhost:5173/'
+                emailRedirectTo: import.meta.env.VITE_APP_URL
             }
         })
         setLoading(false);

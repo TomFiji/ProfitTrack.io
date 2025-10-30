@@ -12,7 +12,7 @@ function ForgotPassword(){
     async function resetPassword(e) {
         e.preventDefault()
         await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: 'http://localhost:5173/confirm-passwords'
+            redirectTo: `${import.meta.env.VITE_APP_URL}/confirm-passwords`
         })
     }    
 

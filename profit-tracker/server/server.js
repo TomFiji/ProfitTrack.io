@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 
 app.use(cors({
     origin: [
-      "http://localhost:5173",
+      process.env.FRONTEND_URL,
       "https://cristen-cognitional-logarithmically.ngrok-free.dev",
       "http://localhost:5000",
       "https://auth.ebay.com"
