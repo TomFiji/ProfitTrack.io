@@ -16,12 +16,13 @@ app.use(cors({
     origin: [
       process.env.FRONTEND_URL,
       process.env.NODE_ENV === 'production' 
-  ? [process.env.FRONTEND_URL, "https://auth.ebay.com"]
-  : [localhost URLs...],
-      "https://cristen-cognitional-logarithmically.ngrok-free.dev",
-      "http://localhost:5000",
-      "http://localhost:5173",
-      "https://auth.ebay.com"
+      ? [process.env.FRONTEND_URL, "https://auth.ebay.com"]
+      : [
+        "https://cristen-cognitional-logarithmically.ngrok-free.dev",
+        "http://localhost:5000",
+        "http://localhost:5173",
+        "https://auth.ebay.com"
+        ],
     ],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
