@@ -56,6 +56,7 @@ router.get("/connect", authenticateUser, (req, res) => {
         `response_type=code&` +
         `redirect_uri=${process.env.EBAY_RUNAME}&` +
         `scope=${encodeURIComponent(process.env.EBAY_SCOPES)}&` +
+        `prompt=login&` +
         `state=${state}`;
 
     res.json({ authUrl })

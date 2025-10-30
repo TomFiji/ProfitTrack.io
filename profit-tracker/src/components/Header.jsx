@@ -18,6 +18,9 @@ function Header() {
     if (error) {
       console.log('Error signing out: ', error)
     } else {
+      // Clear all browser storage to ensure no cached eBay data persists
+      localStorage.clear();
+      sessionStorage.clear();
       navigate("/signin")
     }
   }
