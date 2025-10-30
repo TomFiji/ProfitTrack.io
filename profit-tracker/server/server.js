@@ -15,12 +15,17 @@ const __dirname = path.dirname(__filename);
 app.use(cors({
     origin: [
       process.env.FRONTEND_URL,
-      process.env.BACKEND_URL,
+      process.env.NODE_ENV === 'production' 
+  ? [process.env.FRONTEND_URL, "https://auth.ebay.com"]
+  : [localhost URLs...],
       "https://cristen-cognitional-logarithmically.ngrok-free.dev",
       "http://localhost:5000",
+      "http://localhost:5173",
       "https://auth.ebay.com"
     ],
-    credentials: true
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Type', 'Authorization']
 }))
 
 app.use(express.json());
