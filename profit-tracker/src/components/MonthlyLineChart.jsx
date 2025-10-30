@@ -2,6 +2,7 @@ import { useState, useEffect,} from "react";
 import { Paper, Text } from '@mantine/core';
 import { LineChart } from '@mantine/charts';
 import { supabase } from "./config/supabase";
+import '../css/Chart.css'
 
 function MonthlyLineChart({ height = "40vh", width = "40vw" }){
     const [monthlyPayoutTotals, setMonthlyPayoutTotals] = useState([])
@@ -98,13 +99,15 @@ function MonthlyLineChart({ height = "40vh", width = "40vw" }){
             mergedMap[month] = {
                 month,
                 Payout: p.total_payouts,
-                Expenses: 0
+                Expenses: 0,
+                Profit: 0
             };
         });
 
         monthlyExpenseTotals.forEach(e => {
             const month = monthNames[e.month] || e.month
-            mergedMap[month].Expenses= e.total_expenses;
+            mergedMap[month].Expenses= e.total_expenses,
+            mergedMap[month].Profit = (mergedMap[month].Payout - e.total_expenses)
         })
 
         const mergedArray = Object.values(mergedMap)
@@ -116,7 +119,7 @@ function MonthlyLineChart({ height = "40vh", width = "40vw" }){
     
     useEffect(() => {
         fetchAllMonthlyPayouts();
-        fetchExpensesByMonth();
+        fetchExpensesByMonth()
         }, []);
 
     useEffect(() => {
@@ -139,7 +142,7 @@ function MonthlyLineChart({ height = "40vh", width = "40vw" }){
               marginTop: 4
             }}
           >
-            {item.name}: {item.value}
+            {item.name}: ${item.value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </Text>
         ))}
       </Paper>
@@ -147,27 +150,32 @@ function MonthlyLineChart({ height = "40vh", width = "40vw" }){
     }
 
     return(
-        <LineChart
-            h={height}
-            w= {width}
-            data={data}
-            dataKey="month"
-            strokeDasharray="15 15"
-            xAxisProps={{padding: {right: 30}}}
-            xAxisLabel="Month"
-            yAxisLabel="Amount ($)"
-            series={[
-                { name: 'Payout', color: 'blue.6' },
-                { name: 'Expenses', color: 'red.6' },
-            ]}
-            curveType="linear"
-            tickLine="y"
-            tooltipProps={{
-            content: CustomTooltip
-            }}
-            tooltipAnimationDuration={0}
-            //yAxisProps={{ domain: [0, 12000]}}
-        />
+        <div className="linechart">
+            <h3>Expenses by Category</h3>
+            <LineChart
+                h={height}
+                w= {width}
+                data={data}
+                dataKey="month"
+                strokeDasharray="15 15"
+                xAxisProps={{padding: {right: 30}}}
+                xAxisLabel="Month"
+                yAxisLabel="Amount ($)"
+                series={[
+                    { name: 'Payout', color: 'blue.6' },
+                    { name: 'Expenses', color: 'red.6' },
+                    { name: 'Profit', color: 'green.6'},
+                    
+                ]}
+                curveType="linear"
+                tickLine="y"
+                tooltipProps={{
+                content: CustomTooltip
+                }}
+                tooltipAnimationDuration={0}
+                //yAxisProps={{ domain: [0, 12000]}}
+            />
+        </div>
     )
 }
 export default MonthlyLineChart

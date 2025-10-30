@@ -159,6 +159,34 @@ router.get("/filter", authenticateUser, async (req, res) => {
   }
 });
 
+//GET SUM OF EXPENSES FROM EACH MONTH
+router.get('/monthly', authenticateUser, async(req,res) => {
+    try{
+        const { data, error } = await supabase
+            .rpc('get_monthly_expenses', { user_id_param: req.user.id })
+            
+        if (error) { throw error; }
+        res.json(data)    
+    }catch(err){
+        console.log("Error getting expenses by month: ", err)
+        res.status(500).json({ error: 'Database error' });
+    }
+})
+
+//GET EXPENSES BY CATEGORY
+router.get('/categories', authenticateUser, async(req,res) => {
+    try{
+        const { data, error } = await supabase
+            .rpc('get_expenses_by_category', { user_id_param: req.user.id})
+
+        if(error) {throw error}
+        res.json(data)    
+    }catch(err){
+        console.log("Error getting expenses by category: ", err)
+        res.status(500).json({ error: 'Database error' });
+    }
+})
+
 //EDIT EXPENSE
 router.put('/:id', authenticateUser, async(req,res) => {
     const { id } = req.params;
@@ -192,18 +220,6 @@ router.put('/:id', authenticateUser, async(req,res) => {
     }
 })
 
-//GET SUM OF EXPENSES FROM EACH MONTH
-router.get('/monthly', authenticateUser, async(req,res) => {
-    try{
-        const { data, error } = await supabase
-            .rpc('get_monthly_expenses', { user_id_param: req.user.id })
-            
-        if (error) { throw error; }
-        res.json(data)    
-    }catch(err){
-        console.log("Error getting expenses by month: ", err)
-        res.status(500).json({ error: 'Database error' });
-    }
-})
+
 
 export default router;
