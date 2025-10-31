@@ -13,9 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(cors({
-    origin: [
-      process.env.FRONTEND_URL,
-      process.env.NODE_ENV === 'production' 
+    origin: process.env.NODE_ENV === 'production'
       ? [process.env.FRONTEND_URL, "https://auth.ebay.com"]
       : [
         "https://cristen-cognitional-logarithmically.ngrok-free.dev",
@@ -23,7 +21,6 @@ app.use(cors({
         "http://localhost:5173",
         "https://auth.ebay.com"
         ],
-    ],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Content-Type', 'Authorization']

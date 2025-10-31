@@ -50,8 +50,8 @@ function Signin(){
 
     return(
             <div className='body'>
+             <div className='sign-up-div'>
                 <img class='logo' src={ProfitTrackLogo} />
-                <div className='sign-up-div'>
                     <h1>Log in</h1>
                     <form onSubmit={handleSignin} className='sign-up'>
                         

@@ -98,8 +98,9 @@ function Signup() {
 
     return(
         <div className='body'>
-            <img className='logo' src={ProfitTrackLogo}/>
+            
             <div className='sign-up-div'>
+                <img className='logo' src={ProfitTrackLogo}/>
                 <h1>Signup</h1>
                 <form onSubmit={handleSignup} className='sign-up'>
                     <div>

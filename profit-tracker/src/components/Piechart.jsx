@@ -61,7 +61,7 @@ function Piechart() {
                 data={categoryExpenses}
                 w={"100%"}
                 h={"35vh"}
-                size={282}
+                size={"80%"}
                 strokeWidth={1.5}
                 withTooltip
                 tooltipProps={{
