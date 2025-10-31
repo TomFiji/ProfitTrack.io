@@ -1,10 +1,6 @@
-# eBay Profit Tracker
+# ProfitTrack.io
 
 > A web application that helps eBay resellers track profits by integrating with the eBay API to automatically pull payout data and calculate ROI based on user-inputted expenses.
-
-[Live Demo](https://your-app-url.com) | [Video Demo](link-if-you-have-one)
-
-![Screenshot of dashboard](screenshot.png)
 
 ## 🎯 Why I Built This
 
@@ -70,6 +66,7 @@ cd profit-tracker
 ```bash
 # Install all dependencies
 npm install
+```
 
 3. Set up environment variables
 
@@ -92,27 +89,34 @@ FRONTEND_URL= your_localhost_url_to_run_frontend
 ```
 
 4. Set up the database
-Start a supabase project and create tables:
 
-ebay_connections:
-- id: uuid (Primary Key)
-- user_id: uuid (Foreign Key)
-- access_token: text
-- refresh_token: text
-- expires_at: timestamptz
-- created_at: timestamptz
-- updated_at: timestamptz
+Create the following tables in your Supabase project:
 
-expenses:
-- id: int4 (Primary Key)
-- user_id: uuid (Foreign Key to auth.user.id)
-- category: text
-- description: text
-- expense_date: date
-- amount: numeric
-- created_at: timestamptz
-- updated_at: timestamptz
+**ebay_connections table:**
+```sql
+CREATE TABLE ebay_connections (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id),
+  access_token TEXT,
+  refresh_token TEXT,
+  expires_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
 
+**expenses table:**
+```sql
+CREATE TABLE expenses (
+  id SERIAL PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id),
+  category TEXT,
+  description TEXT,
+  expense_date DATE,
+  amount NUMERIC,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
 ```
 
 5. Run the application
@@ -140,26 +144,38 @@ Visit `http://localhost:5173` to see the app.
 - [ ] Add export to CSV functionality
 - [ ] Faster refresh for monthly line chart
 - [ ] Support for multiple marketplaces (Amazon, Mercari, etc.)
+- [ ] Turn this into a mobile app
 
-## 📝 License
-
-MIT License - feel free to use this project as inspiration for your own!
 
 ## 👤 Author
 
-**Your Name**
+**Tom Fijalkowski**
 - GitHub: [@TomFiji](https://github.com/tomfiji)
 - LinkedIn: [Tom Fijalkowski](https://linkedin.com/in/tom-fijalkowski)
 - Email: tomfijalkowski@yahoo.com
 
 ---
 
+## 📸 Screenshots
+
+### Sign Up / Login
+![Sign Up Page](./profit-tracker/src/assets/Screenshots/Signup_Screenshot.PNG)
+
+### Dashboard
+![Dashboard](./profit-tracker/src/assets/Screenshots/Home_Screenshot.PNG)
+
+### Expense Filtering
+![Filter View](./profit-tracker/src/assets/Screenshots/Filter_Screenshot.PNG)
+
+### Analytics
+![Analytics Dashboard](./profit-tracker/src/assets/Screenshots/Analytics_Screenshot.PNG)
+
+## 🚀 Live Demo
+
+Demo link and video walkthrough coming soon!
+
+
 Built with ☕ and determination to land my first software engineering role!
 ```
 
 ---
-
-![alt text](./profit-tracker/src/assets/Screenshots/Signup_Screenshot.PNG)
-![alt text](./profit-tracker/src/assets/Screenshots/Home_Screenshot.PNG)
-![alt text](./profit-tracker/src/assets/Screenshots/Filter_Screenshot.PNG)
-![alt text](./profit-tracker/src/assets/Screenshots/Analytics_Screenshot.PNG)
