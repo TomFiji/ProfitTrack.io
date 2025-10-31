@@ -79,14 +79,17 @@ function Signup() {
                     first_name: firstName,
                     last_name: lastName
                 },
-                emailRedirectTo: `${import.meta.env.VITE_APP_URL}/verify-email`
+                emailRedirectTo: `${import.meta.env.VITE_API_URL}/verify-email`
             }
         })
+        console.log("User data: ", data)
         setLoading(false);
         if (error) {
+            console.log("There is an error logging in")
             setError(error.message)
         }
         if (data.user){
+            (console.log("This is supposed to lead to /verify-email"))
             navigate('/verify-email')
         }
     
