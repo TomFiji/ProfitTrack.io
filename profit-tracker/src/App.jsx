@@ -36,7 +36,7 @@ function App() {
               <Route path="/analytics" element={<ProtectedRoute>{<Analytics />}</ProtectedRoute>}/>
               <Route path="/signup" element={<SignupPage />}/>
               <Route path="/signin" element={<SigninPage />}/>
-              <Route path="/verify-email" element={<ProtectedRoute>{<VerifyEmailPage />}</ProtectedRoute>}/>
+              <Route path="/verify-email" element={<VerifyEmailPage />}/>
               <Route path="/forgot-password" element={<ForgotPasswordPage />}/>
               <Route path="/confirm-passwords" element={<ProtectedRoute>{<ConfirmPasswordsPage />}</ProtectedRoute>}/>
             </Routes>
