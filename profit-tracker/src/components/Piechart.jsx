@@ -11,7 +11,7 @@ function Piechart() {
         const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
             try {
-                const res = await fetch(`${import.meta.env.VITE_API_URL}/expenses/categories`, {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/categories`, {
                     headers: {'Authorization': `Bearer ${session.access_token}`}
                 });
             if(!res.ok) throw new Error('Failed to fetch expenses');
@@ -57,9 +57,9 @@ function Piechart() {
     return(
         <div className="piechart">
             <h3>Expenses by Category</h3>
-            <PieChart 
+            <PieChart
                 data={categoryExpenses}
-                w={"50vw"} 
+                w={"100%"}
                 h={"35vh"}
                 size={282}
                 strokeWidth={1.5}

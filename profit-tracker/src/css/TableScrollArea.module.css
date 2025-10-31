@@ -17,3 +17,40 @@
 .scrolled {
   box-shadow: var(--mantine-shadow-sm);
 }
+
+.scrollArea {
+  height: 77vh;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .scrollArea {
+    height: auto;
+    max-height: none;
+  }
+
+  .table {
+    min-width: 100% !important;
+    font-size: 0.85rem;
+  }
+
+  .table input,
+  .table select {
+    font-size: 0.85rem;
+    padding: 4px;
+    width: 100%;
+  }
+
+  .buttonGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+  }
+
+  .buttonGroup button {
+    width: 100%;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+}

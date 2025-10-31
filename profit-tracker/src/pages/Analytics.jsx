@@ -6,7 +6,11 @@ import { Flex } from '@mantine/core'
 function Analytics() {
     return (
         <>
-            <Flex gap="xl" align="flex-start">
+            <Flex
+                gap="xl"
+                align="flex-start"
+                direction={{ base: 'column', md: 'row' }}
+            >
                 <MonthlyLineChart />
                 <Piechart />
             </Flex>

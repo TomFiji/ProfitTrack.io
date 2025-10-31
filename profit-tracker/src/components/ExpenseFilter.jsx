@@ -40,10 +40,10 @@ function ExpenseFilter({ onFilter }) {
     }
 
     return (
-        <form class="expense-filter-form" onSubmit={handleSubmit}>
-        <div class='category-description'>
-            <MultiSelect 
-                class = "multiselect"
+        <form className="expense-filter-form" onSubmit={handleSubmit}>
+        <div className='category-description'>
+            <MultiSelect
+                className = "multiselect"
                 placeholder = 'Choose your categories'
                 data={expenseCategories}
                 onChange={handleCategoryChange}
@@ -52,7 +52,7 @@ function ExpenseFilter({ onFilter }) {
             />
             <input
                 type="text"
-                class="description-input"
+                className="description-input"
                 name="description"
                 placeholder="Search description"
                 value={filters.description}

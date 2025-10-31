@@ -4,7 +4,7 @@ import { LineChart } from '@mantine/charts';
 import { supabase } from "./config/supabase";
 import '../css/Chart.css'
 
-function MonthlyLineChart({ height = "40vh", width = "40vw" }){
+function MonthlyLineChart({ height = "40vh", width = "100%" }){
     const [monthlyPayoutTotals, setMonthlyPayoutTotals] = useState([])
     const [monthlyExpenseTotals, setMonthlyExpenseTotals] = useState([])
     const [data, setData] = useState([])
@@ -49,7 +49,7 @@ function MonthlyLineChart({ height = "40vh", width = "40vw" }){
         const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
             try {
-                const res = await fetch(`${import.meta.env.VITE_API_URL}/expenses/monthly`, {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/monthly`, {
                     headers: {'Authorization': `Bearer ${session.access_token}`}
                 });
             if(!res.ok) throw new Error('Failed to fetch expenses');

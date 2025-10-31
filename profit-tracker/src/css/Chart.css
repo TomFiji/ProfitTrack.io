@@ -2,7 +2,31 @@ h3{
     text-align:center;
 }
 
+.linechart {
+    width: 40vw;
+}
+
 .linechart h3{
     margin-bottom: 20px;
-    width: 40vw;
+    width: 100%;
+}
+
+.piechart {
+    width: 50vw;
+}
+
+.piechart h3 {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+/* Mobile responsive: full width on screens under 768px */
+@media (max-width: 768px) {
+    .linechart {
+        width: 95vw;
+    }
+
+    .piechart {
+        width: 95vw;
+    }
 }

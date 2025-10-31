@@ -110,7 +110,7 @@ function ExpenseTable({ filteredExpenses = [] }) {
             />
           </Table.Td>  
           <Table.Td>
-            <div>
+            <div className={classes.buttonGroup}>
                 <Button onClick={handleSave} variant="filled" size="md" color='indigo'>Save</Button>
                 <Button onClick={handleCancel} variant="filled" color="red" size="md">Cancel</Button>
             </div>
@@ -123,8 +123,10 @@ function ExpenseTable({ filteredExpenses = [] }) {
           <Table.Td>${expense.amount.toFixed(2)}</Table.Td>
           <Table.Td>{format(new Date(expense.expense_date + 'T12:00:00'), 'MM/dd/yyyy')}</Table.Td>
           <Table.Td>
-            <Button onClick={() => startEditing(expense)} variant="filled" size="md">Edit</Button>
-            <Button onClick={() => handleDelete(expense.id)} variant="filled" color="rgba(247, 45, 45, 1)" size="md">Delete</Button>
+            <div className={classes.buttonGroup}>
+              <Button onClick={() => startEditing(expense)} variant="filled" size="md">Edit</Button>
+              <Button onClick={() => handleDelete(expense.id)} variant="filled" color="rgba(247, 45, 45, 1)" size="md">Delete</Button>
+            </div>
           </Table.Td>  
         </>  
       )}
@@ -132,8 +134,8 @@ function ExpenseTable({ filteredExpenses = [] }) {
   ));
 
   return (
-    <ScrollArea h="77vh" onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
-      <Table miw={700}>
+    <ScrollArea className={classes.scrollArea} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+      <Table miw={700} className={classes.table}>
         <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
           <Table.Tr>
             <Table.Th>Type</Table.Th>

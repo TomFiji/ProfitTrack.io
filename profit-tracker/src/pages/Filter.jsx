@@ -15,14 +15,18 @@ function Filter() {
         <div style={{
             display: 'flex',
             flexDirection: 'column',
-            height: '100%',
-            overflow: 'hidden'
+            minHeight: '100%'
         }}>
-            <Flex gap="xl" align="flex-start">
+            <Flex
+                gap={{ base: 'md', md: 'xl' }}
+                align="flex-start"
+                direction={{ base: 'column', md: 'row' }}
+                mb={{ base: 'sm', md: 'md' }}
+            >
                 <ExpenseFilter onFilter={fetchFilteredExpenses}/>
                 <FilterExpenseTotalGrid total={filteredExpenseTotal} />
             </Flex>
-            <div style={{ flex: 1, overflow: 'hidden' }}>
+            <div style={{ flex: 1 }}>
                 <ExpenseTable filteredExpenses={filteredExpenses}/>
             </div>
         </div>

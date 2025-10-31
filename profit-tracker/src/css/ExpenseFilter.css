@@ -1,10 +1,12 @@
 .expense-filter-form{
     margin-right: 200px;
+    flex: 1;
 }
 
 .expense-filter-form .category-description{
     display: flex;
     flex-direction: row;
+    gap: 10px;
 }
 
 .expense-filter-form .multiselect {
@@ -39,6 +41,11 @@
     background-color: var(--accent-color);
     margin-left: 20px;
     margin-top: 5px;
+    padding: 5px 15px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
 }
 
 .expense-filter-form button:hover{
@@ -47,5 +54,47 @@
 
 .description-input{
     width: 20vw;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .expense-filter-form {
+        margin-right: 0;
+        width: 100%;
+    }
+
+    .expense-filter-form .category-description {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .expense-filter-form .multiselect {
+        width: 100% !important;
+    }
+
+    .description-input {
+        width: 100%;
+    }
+
+    .expense-filter-form input {
+        width: 100%;
+        margin: 3px 0;
+        padding: 4px 8px;
+        box-sizing: border-box;
+        font-size: 0.9rem;
+    }
+
+    .expense-filter-form > div {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 5px;
+    }
+
+    .expense-filter-form button {
+        width: 100%;
+        margin: 8px 0 0 0;
+        padding: 8px 15px;
+    }
 }
 
