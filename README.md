@@ -172,7 +172,7 @@ Visit `http://localhost:5173` to see the app.
 
 ## 🚀 Live Demo
 
-Demo link and video walkthrough coming soon!
+[Live Demo](https://www.loom.com/share/a6ddaead8797495391cefdf39d67cfbe)
 
 
 Built with ☕ and determination to land my first software engineering role!
