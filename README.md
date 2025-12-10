@@ -152,7 +152,7 @@ Visit `http://localhost:5173` to see the app.
 **Tom Fijalkowski**
 - GitHub: [@TomFiji](https://github.com/tomfiji)
 - LinkedIn: [Tom Fijalkowski](https://linkedin.com/in/tom-fijalkowski)
-- Email: tomfijalkowski@yahoo.com
+- Email: tf.tomfijalkowski@gmail.com
 
 ---
 
