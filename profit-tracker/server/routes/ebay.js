@@ -13,7 +13,10 @@ let currentDate = `${date.getFullYear()}-${date.getMonth() +1}-${date.getDate()}
 router.get("/payouts", authenticateUser, async (req, res) => {
     try{
         const access_token = await getValidAccessToken(req.user.id)
-        const response = await axios.get(`https://apiz.ebay.com/sell/finances/v1/payout?filter=payoutDate:[${date.getFullYear()}-1-1T00:00:01.000Z..${currentDate}T00:00:01.000Z]&limit=200&offset=0`, {
+        const year = req.query.year ? parseInt(req.query.year) : date.getFullYear()
+        const isCurrentYear = year === date.getFullYear();
+        const endDate = isCurrentYear ? currentDate : `${year}-12-31`
+        const response = await axios.get(`https://apiz.ebay.com/sell/finances/v1/payout?filter=payoutDate:[${year}-1-1T00:00:01.000Z..${endDate}T00:00:01.000Z]&limit=200&offset=0`, {
             headers: {
                 Authorization: `Bearer ${access_token}`,
                 'Content-Type': 'application/json'

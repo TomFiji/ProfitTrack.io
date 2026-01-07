@@ -55,10 +55,14 @@ router.post('/', authenticateUser, async(req, res) => {
 //GET TOTAL SUM OF ALL EXPENSES
 router.get('/total', authenticateUser, async(req, res) => {
     try {
+        const year = req.query.year ? parseInt(req.query.year) : new Date().getFullYear();
+
         const { data, error } = await supabase
             .from('expenses')
             .select('amount')
             .eq('user_id', req.user.id)
+            .gte('expense_date', `${year}-01-01`)
+            .lt('expense_date', `${year+1}-01-01`)
 
         if (error) { throw error || "Could not retrieve expenses total"}
         const total = data.reduce((sum, expense) => sum + expense.amount, 0)

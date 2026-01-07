@@ -15,14 +15,17 @@ export const ExpenseProvider = ({children}) => {
     const[error, setError] = useState(null);
     const [filteredExpenses, setFilteredExpenses] = useState([]);
     const [filteredExpenseTotal, setFilteredExpeneseTotal] = useState(0);
+    const currentYear = new Date().getFullYear();
+    const [selectedYear, setSelectedYear] = useState(currentYear);
 
     
 
     const fetchGrossPayout = async () => {
+            console.log('Fetching data for year: ', selectedYear)
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
             try {
-                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/ebay/payouts`, {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/ebay/payouts?year=${selectedYear}`, {
                     headers: {'Authorization': `Bearer ${session.access_token}`}
                 });
 
@@ -34,7 +37,6 @@ export const ExpenseProvider = ({children}) => {
                 for (let i=0; i<data.payouts.length; i++){
                     grossPayout += parseFloat(data.payouts[i].amount.value);
                 }
-                console.log(data)
                 setGrossPayout(grossPayout);
             }catch(error){
                 setError('Failed to load payout data');
@@ -188,9 +190,10 @@ export const ExpenseProvider = ({children}) => {
 
     const fetchTotalExpenseAmount = async () => {
         try{
+            console.log('Fetching data for year: ', selectedYear)
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/total`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/total?year=${selectedYear}`, {
                 headers: { 'Authorization': `Bearer ${session.access_token}` }
             });
             
@@ -243,6 +246,12 @@ export const ExpenseProvider = ({children}) => {
         fetchFilteredExpensesTotal(filteredExpenses);
     }, [filteredExpenses, fetchFilteredExpensesTotal]);
 
+    useEffect(() => {
+        if(selectedYear){
+            refreshExpenses();
+        }
+    }, [selectedYear])
+
 
 
     const value = {
@@ -255,6 +264,8 @@ export const ExpenseProvider = ({children}) => {
         monthlyExpenseAmount,
         filteredExpenses,
         filteredExpenseTotal,
+        selectedYear,
+        setSelectedYear,
         addExpense,
         handleEditSubmit,
         handleDelete,
