@@ -3,8 +3,11 @@ import { useExpenseContext } from "../contexts/ExpenseContext";
 
 function YearSelect()  {
     const { selectedYear, setSelectedYear } = useExpenseContext();
-    console.log('Current selected year ', selectedYear)
     const currentYear = new Date().getFullYear();
+
+    const handleYearChange = (value) => {
+        setSelectedYear(parseInt(value, 10));
+    };
 
     return(
     <>
@@ -12,7 +15,7 @@ function YearSelect()  {
             placeholder = "Pick a year"
             value={String(selectedYear)}
             data={[String(currentYear-3), String(currentYear-2), String(currentYear-1), String(currentYear)]}
-            onChange={setSelectedYear}
+            onChange={handleYearChange}
         />
     </>
     )

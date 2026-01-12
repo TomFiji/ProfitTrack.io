@@ -3,11 +3,13 @@ import { Paper, Text } from '@mantine/core';
 import { LineChart } from '@mantine/charts';
 import { supabase } from "./config/supabase";
 import '../css/Chart.css'
+import { useExpenseContext } from "../contexts/ExpenseContext";
 
 function MonthlyLineChart({ height = "40vh", width = "100%" }){
     const [monthlyPayoutTotals, setMonthlyPayoutTotals] = useState([])
     const [monthlyExpenseTotals, setMonthlyExpenseTotals] = useState([])
     const [data, setData] = useState([])
+    const { selectedYear } = useExpenseContext();
 
    /*async function refreshExpenses() {
         await Promise.all([fetchExpensesByMonth()])
@@ -18,7 +20,7 @@ function MonthlyLineChart({ height = "40vh", width = "100%" }){
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) throw new Error('No active session');
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/ebay/payouts`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/ebay/payouts?year=${selectedYear}`, {
                 headers: {'Authorization': `Bearer ${session.access_token}`}
             });
 
@@ -49,7 +51,7 @@ function MonthlyLineChart({ height = "40vh", width = "100%" }){
         const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
             try {
-                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/monthly`, {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/monthly?year=${selectedYear}`, {
                     headers: {'Authorization': `Bearer ${session.access_token}`}
                 });
             if(!res.ok) throw new Error('Failed to fetch expenses');
@@ -59,7 +61,6 @@ function MonthlyLineChart({ height = "40vh", width = "100%" }){
                 total_expenses: parseFloat(r.total_expenses)
             }))
             setMonthlyExpenseTotals(formatted);
-            //console.log(formatted)
         } catch(error){
             console.error('Error fetching expenses:', error);
             res.status(500).json({ error: 'eBay API error'})
@@ -100,18 +101,20 @@ function MonthlyLineChart({ height = "40vh", width = "100%" }){
                 month,
                 Payout: p.total_payouts,
                 Expenses: 0,
-                Profit: 0
+                Profit: p.total_payouts
             };
         });
 
         monthlyExpenseTotals.forEach(e => {
             const month = monthNames[e.month] || e.month
-            mergedMap[month].Expenses= e.total_expenses,
-            mergedMap[month].Profit = (mergedMap[month].Payout - e.total_expenses)
+            if (mergedMap[month]) {
+                mergedMap[month].Expenses = e.total_expenses || 0;
+                mergedMap[month].Profit = mergedMap[month].Payout - (e.total_expenses || 0);
+            }
         })
 
         const mergedArray = Object.values(mergedMap)
-        mergedArray.sort((a, b) => new Date(`2025-${a.month}-01`) - new Date(`2025-${b.month}-01`));
+        mergedArray.sort((a, b) => new Date(`${selectedYear}-${a.month}-01`) - new Date(`${selectedYear}-${b.month}-01`));
         setData(mergedArray)
         console.log(mergedArray)
     }
@@ -120,12 +123,10 @@ function MonthlyLineChart({ height = "40vh", width = "100%" }){
     useEffect(() => {
         fetchAllMonthlyPayouts();
         fetchExpensesByMonth()
-        }, []);
+        }, [selectedYear]);
 
     useEffect(() => {
-        if (monthlyPayoutTotals.length > 0 && monthlyExpenseTotals.length > 0) {
-            mergeData();
-        }
+        mergeData()
         }, [monthlyPayoutTotals, monthlyExpenseTotals]);   
         
     const CustomTooltip = ({ payload, label }) => {

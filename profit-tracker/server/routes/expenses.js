@@ -150,8 +150,9 @@ router.get("/filter", authenticateUser, async (req, res) => {
 //GET SUM OF EXPENSES FROM EACH MONTH
 router.get('/monthly', authenticateUser, async(req,res) => {
     try{
+        const year = req.query.year ? parseInt(req.query.year) : new Date().getFullYear();
         const { data, error } = await supabase
-            .rpc('get_monthly_expenses', { user_id_param: req.user.id })
+            .rpc('get_monthly_expenses', { user_id_param: req.user.id, selected_year: year })
             
         if (error) { throw error; }
         res.json(data)    
@@ -164,8 +165,9 @@ router.get('/monthly', authenticateUser, async(req,res) => {
 //GET EXPENSES BY CATEGORY
 router.get('/categories', authenticateUser, async(req,res) => {
     try{
+        const year = req.query.year ? parseInt(req.query.year) : new Date().getFullYear();
         const { data, error } = await supabase
-            .rpc('get_expenses_by_category', { user_id_param: req.user.id})
+            .rpc('get_expenses_by_category', { user_id_param: req.user.id, selected_year: year})
 
         if(error) {throw error}
         res.json(data)    

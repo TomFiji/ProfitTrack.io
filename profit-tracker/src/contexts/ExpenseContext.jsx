@@ -12,7 +12,7 @@ export const ExpenseProvider = ({children}) => {
     const [grossPayout, setGrossPayout] = useState(0);
     const [monthlyPayout, setMonthlyPayout] = useState(0);
     const [loading, setLoading] = useState(true);
-    const[error, setError] = useState(null);
+    const [error, setError] = useState(null);
     const [filteredExpenses, setFilteredExpenses] = useState([]);
     const [filteredExpenseTotal, setFilteredExpeneseTotal] = useState(0);
     const currentYear = new Date().getFullYear();
@@ -20,7 +20,7 @@ export const ExpenseProvider = ({children}) => {
 
     
 
-    const fetchGrossPayout = async () => {
+    const fetchGrossPayout = useCallback(async () => {
             console.log('Fetching data for year: ', selectedYear)
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('No active session');
@@ -42,7 +42,7 @@ export const ExpenseProvider = ({children}) => {
                 setError('Failed to load payout data');
                 console.log(error);
             }
-        }
+        }, [selectedYear])
 
     const fetchMonthlyPayout = async () => {
             const { data: { session } } = await supabase.auth.getSession();
@@ -67,13 +67,13 @@ export const ExpenseProvider = ({children}) => {
             }
         }    
     
-    async function refreshExpenses() {
+    const refreshExpenses = useCallback(async () => {
         // don't call fetchFilteredExpensesTotal() here because filteredExpenses
         // may not have updated yet after a setFilteredExpenses call. We
         // recompute filtered total in a dedicated useEffect that listens for
         // changes to `filteredExpenses`.
         await Promise.all([fetchTotalExpenseAmount(), fetchGrossPayout(), fetchMonthlyExpenseAmount(), fetchMonthlyPayout()]);
-    }
+    })
 
     const addExpense = async (newExpense) => {
         const payload = {
@@ -188,7 +188,7 @@ export const ExpenseProvider = ({children}) => {
         }
     }
 
-    const fetchTotalExpenseAmount = async () => {
+    const fetchTotalExpenseAmount = useCallback(async () => {
         try{
             console.log('Fetching data for year: ', selectedYear)
             const { data: { session } } = await supabase.auth.getSession();
@@ -196,14 +196,14 @@ export const ExpenseProvider = ({children}) => {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/total?year=${selectedYear}`, {
                 headers: { 'Authorization': `Bearer ${session.access_token}` }
             });
-            
+
             if(!response.ok) throw new Error('Failed to fetch expenses');
             const data = await response.json();
             setTotalExpenseAmount(data)
         }catch(error){
             console.error('Error fetching total amount of expenses:', error)
         }
-    }
+    }, [selectedYear])
 
     const fetchMonthlyExpenseAmount = async () => {
         try{
@@ -294,14 +294,10 @@ export const ExpenseProvider = ({children}) => {
                 setFilteredExpenses([]);
                 setFilteredExpeneseTotal(0);
                 setError(null);
-            } else if (event === 'SIGNED_IN' && session) {
-                // Refetch data when user signs in
-                fetchExpenses();
-                fetchGrossPayout();
-                fetchTotalExpenseAmount();
-                fetchMonthlyPayout();
-                fetchMonthlyExpenseAmount();
+                setSelectedYear(currentYear);
             }
+            // Removed automatic refetch on SIGNED_IN to prevent
+            // unexpected data refreshes that ignore selectedYear
         });
 
         return () => subscription.unsubscribe();

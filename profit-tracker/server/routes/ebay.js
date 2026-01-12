@@ -40,7 +40,7 @@ router.get("/monthly-payouts", authenticateUser, async (req, res) => {
                 'Content-Type': 'application/json'
             }
         });
-    res.json(response.data);
+        res.json(response.data);
     } catch (error){
         console.log("eBay API error with monthly payouts: ", error.response?.data || error.message);
         res.status(500).json({ error: "Failed to fetch data from eBay" });
