@@ -3,17 +3,19 @@ import { Paper, Text } from '@mantine/core';
 import { PieChart } from '@mantine/charts'
 import { supabase } from "./config/supabase";
 import '../css/Chart.css'
+import { useExpenseContext } from "../contexts/ExpenseContext";
 
 function Piechart() {
     const [categoryExpenses, setCategoryExpenses] = useState([])
+    const { selectedYear } = useExpenseContext();
 
     const fetchExpensesByCategory = async (req, res) => {
         const { data: { session } } = await supabase.auth.getSession();
-            if (!session) throw new Error('No active session');
-            try {
-                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/categories`, {
-                    headers: {'Authorization': `Bearer ${session.access_token}`}
-                });
+        if (!session) throw new Error('No active session');
+        try {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/categories?year=${selectedYear}`, {
+                headers: {'Authorization': `Bearer ${session.access_token}`}
+            });
             if(!res.ok) throw new Error('Failed to fetch expenses');
             const data = await res.json();
             const formatted = data.map((r, index) => ({
@@ -52,7 +54,7 @@ function Piechart() {
 
     useEffect(() => {
         fetchExpensesByCategory();
-        }, []);
+        }, [selectedYear]);
 
     return(
         <div className="piechart">

@@ -7,19 +7,26 @@ import classes from '../css/StatGridIcons.module.css';
 
 
 
+
 function StatsGridIcons() {
 
-  const { totalExpenseAmount, grossPayout, monthlyExpenseAmount, monthlyPayout} = useExpenseContext()
+  const { totalExpenseAmount, grossPayout, monthlyExpenseAmount, monthlyPayout, selectedYear} = useExpenseContext()
 
   const netPayout = (grossPayout - totalExpenseAmount);
   const netMonthlyPayout = (monthlyPayout - monthlyExpenseAmount);
+
+  const isCurrentYear = new Date().getFullYear() === selectedYear
 
 
   const data = [
     { title: 'Annual Profit', value: `$${netPayout.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: 1 },
     { title: 'Annual Expenses', value: `$${totalExpenseAmount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: -1 },
-    { title: 'Monthly Profit', value: `$${netMonthlyPayout.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: 1 },
-    { title: 'Monthly Expenses', value: `$${monthlyExpenseAmount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: -1 },
+    ...(isCurrentYear ? [
+      { title: 'Monthly Profit', value: `$${netMonthlyPayout.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: 1 },
+      { title: 'Monthly Expenses', value: `$${monthlyExpenseAmount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: -1 }
+    ] : [
+      { title: 'Annual Payouts', value: `$${grossPayout.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, diff: 1 }
+    ])
   ];
 
 
