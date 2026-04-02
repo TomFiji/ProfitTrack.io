@@ -8,6 +8,7 @@ import SigninPage from './pages/Signin_Page';
 import VerifyEmailPage from './pages/VerifyEmail';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import ConfirmPasswordsPage from './pages/ConfirmPasswords';
+import Poshmark from './pages/Poshmark';
 import Header from './components/Header'
 import ProtectedRoute from './components/ProtectedRoute';
 import {Routes, Route, useLocation} from 'react-router-dom';
@@ -39,6 +40,7 @@ function App() {
               <Route path="/verify-email" element={<VerifyEmailPage />}/>
               <Route path="/forgot-password" element={<ForgotPasswordPage />}/>
               <Route path="/confirm-passwords" element={<ProtectedRoute>{<ConfirmPasswordsPage />}</ProtectedRoute>}/>
+              <Route path='/poshmark' element={<ProtectedRoute>{<Poshmark />}</ProtectedRoute>}/>
             </Routes>
           </main>
         </div>

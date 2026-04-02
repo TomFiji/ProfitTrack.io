@@ -76,8 +76,8 @@ function Header() {
             <a href="/filter" className={classes.link}>
               Filter
             </a>
-            <a href="/analytics" className={classes.link}>
-              Analytics
+            <a href="/poshmark" className={classes.link}>
+              Poshmark
             </a>
           </Group>
 
