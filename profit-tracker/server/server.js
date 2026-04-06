@@ -6,6 +6,7 @@ const app = express();
 import 'dotenv/config';
 import expensesData from './routes/expenses.js'
 import router from './routes/ebay.js'
+import poshmarkRouter from './routes/poshmark.js'
 
 const PORT = process.env.PORT || 5000
 
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use('/api/expenses', expensesData)
 
 app.use('/api/ebay', router)
+app.use('/api/poshmark', poshmarkRouter)
 
 // Serve static files from React build in production
 if (process.env.NODE_ENV === 'production') {

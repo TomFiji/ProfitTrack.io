@@ -1,0 +1,18 @@
+.dropzone {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.dropzone-active {
+  border-color: #4a90d9;
+  background-color: #f0f7ff;
+}
+
+.dropzone-error {
+  color: red;
+  margin-top: 8px;
+  font-size: 0.875rem;
+}

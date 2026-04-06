@@ -1,0 +1,23 @@
+details{
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.instructions-content{
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #fafafa;
+    border-left: 3px solid #007bff;
+}
+
+.instructions-content li{
+    margin: 8px 0;
+    margin-left: 20px;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}

@@ -1,19 +1,40 @@
 import { useDropzone } from 'react-dropzone'
 import Papa from 'papaparse';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import '../css/Dropzone.css'
 
-function CsvUpload({onDataParsed}) {
+const REQUIRED_COLUMNS = ['Order Date', 'Order Id', 'Listing Title', 'Order Price', 'Your Earnings']
+
+function CsvUpload() {
+    const [file, setFile] = useState([])
+    const [error, setError] = useState(null)
 
     const onDrop = useCallback((files) => {
+        setFile(files[0])
+        setError(null)
         Papa.parse(files[0], {
             header: true,
             skipEmptyLines: true,
-            complete: (results) => {
-                onDataParsed(results.data);
+            beforeFirstChunk: (chunk) => {
+                const lines = chunk.split('\n')
+                const headerIndex = lines.findIndex(line => line.startsWith('Listing Date'))
+                return lines.slice(headerIndex).join('\n')
+            },
+            complete: async (results) => {
+                const columns = results.meta.fields
+                const missing = REQUIRED_COLUMNS.filter(col => !columns.includes(col))
+                if (missing.length > 0) {
+                    setError(`Invalid CSV: missing columns: ${missing.join(', ')}`)
+                    return
+                }
+                await fetch('/api/poshmark/upload', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ rows: results.data })
+                })
             },
         })
-
-    }, [onDataParsed])
+    }, [])
 
     const {getRootProps, getInputProps, isDragActive} = useDropzone({
         onDrop,
@@ -23,13 +44,17 @@ function CsvUpload({onDataParsed}) {
 
     return(
         <>
-            <div {...getRootProps()}>
+            <div {...getRootProps({
+                className: `dropzone ${isDragActive ? 'dropzone-active' : ''}`}
+            )}
+                >
                 <input {...getInputProps()} />
                 {
                     isDragActive ?
                         <p>Drop the files here...</p>:
-                        <p>Drag the Poshmark CSV here, or click to select files</p>
+                        file.name ? <a>{file.name}</a> : <p>Drag the Poshmark CSV here, or click to select files</p>
                 }
+                {error && <p className="dropzone-error">{error}</p>}
             </div>
         </>
     )
