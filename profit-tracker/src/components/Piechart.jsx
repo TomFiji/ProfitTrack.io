@@ -3,11 +3,11 @@ import { Paper, Text } from '@mantine/core';
 import { PieChart } from '@mantine/charts'
 import { supabase } from "./config/supabase";
 import '../css/Chart.css'
-import { useExpenseContext } from "../contexts/ExpenseContext";
+import { useYearContext } from "../contexts/YearContext";
 
 function Piechart() {
     const [categoryExpenses, setCategoryExpenses] = useState([])
-    const { selectedYear } = useExpenseContext();
+    const { selectedYear } = useYearContext();
 
     const fetchExpensesByCategory = async (req, res) => {
         const { data: { session } } = await supabase.auth.getSession();

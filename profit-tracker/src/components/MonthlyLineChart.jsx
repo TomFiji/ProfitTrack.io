@@ -3,13 +3,13 @@ import { Paper, Text } from '@mantine/core';
 import { LineChart } from '@mantine/charts';
 import { supabase } from "./config/supabase";
 import '../css/Chart.css'
-import { useExpenseContext } from "../contexts/ExpenseContext";
+import { useYearContext } from "../contexts/YearContext";
 
 function MonthlyLineChart({ height = "40vh", width = "100%" }){
     const [monthlyPayoutTotals, setMonthlyPayoutTotals] = useState([])
     const [monthlyExpenseTotals, setMonthlyExpenseTotals] = useState([])
     const [data, setData] = useState([])
-    const { selectedYear } = useExpenseContext();
+    const { selectedYear } = useYearContext();
 
    /*async function refreshExpenses() {
         await Promise.all([fetchExpensesByMonth()])

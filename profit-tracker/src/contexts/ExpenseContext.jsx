@@ -1,5 +1,6 @@
 import {createContext, useState, useContext, useEffect, useCallback} from "react";
 import { supabase } from '../components/config/supabase.js';
+import { useYearContext } from './YearContext.jsx';
 
 const ExpenseContext = createContext();
 
@@ -15,8 +16,7 @@ export const ExpenseProvider = ({children}) => {
     const [error, setError] = useState(null);
     const [filteredExpenses, setFilteredExpenses] = useState([]);
     const [filteredExpenseTotal, setFilteredExpeneseTotal] = useState(0);
-    const currentYear = new Date().getFullYear();
-    const [selectedYear, setSelectedYear] = useState(currentYear);
+    const { selectedYear, setSelectedYear, currentYear } = useYearContext();
 
     
 

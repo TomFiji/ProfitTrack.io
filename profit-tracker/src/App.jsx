@@ -14,6 +14,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import {Routes, Route, useLocation} from 'react-router-dom';
 import "./css/App.css"
 import { ExpenseProvider } from './contexts/ExpenseContext';
+import { YearProvider } from './contexts/YearContext';
+import { PoshmarkProvider } from './contexts/PoshmarkContext';
 import '@mantine/core/styles.css';
 import { createTheme, MantineProvider } from '@mantine/core';
 
@@ -26,7 +28,9 @@ function App() {
   const shouldShowHeader = !showHeaderRoutes.includes(location.pathname);
   return(
     <MantineProvider>
+      <YearProvider>
       <ExpenseProvider>
+      <PoshmarkProvider>
         <div className="app-shell">
           {shouldShowHeader && <Header />}
           <main className="main-content">
@@ -44,7 +48,9 @@ function App() {
             </Routes>
           </main>
         </div>
+      </PoshmarkProvider>
       </ExpenseProvider>
+      </YearProvider>
     </MantineProvider>  
   )
 }

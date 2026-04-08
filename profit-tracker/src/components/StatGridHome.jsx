@@ -1,4 +1,5 @@
 import { useExpenseContext } from '../contexts/ExpenseContext.jsx'
+import { useYearContext } from '../contexts/YearContext.jsx'
 import { IconArrowDownRight, IconArrowUpRight } from '@tabler/icons-react';
 import { Group, Paper, SimpleGrid, Text, ThemeIcon } from '@mantine/core';
 import classes from '../css/StatGridIcons.module.css';
@@ -10,7 +11,8 @@ import classes from '../css/StatGridIcons.module.css';
 
 function StatsGridIcons() {
 
-  const { totalExpenseAmount, grossPayout, monthlyExpenseAmount, monthlyPayout, selectedYear} = useExpenseContext()
+  const { totalExpenseAmount, grossPayout, monthlyExpenseAmount, monthlyPayout } = useExpenseContext()
+  const { selectedYear } = useYearContext()
 
   const netPayout = (grossPayout - totalExpenseAmount);
   const netMonthlyPayout = (monthlyPayout - monthlyExpenseAmount);

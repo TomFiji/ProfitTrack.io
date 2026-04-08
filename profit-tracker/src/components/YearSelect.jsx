@@ -1,8 +1,8 @@
 import { Select } from "@mantine/core";
-import { useExpenseContext } from "../contexts/ExpenseContext";
+import { useYearContext } from "../contexts/YearContext";
 
 function YearSelect()  {
-    const { selectedYear, setSelectedYear } = useExpenseContext();
+    const { selectedYear, setSelectedYear } = useYearContext();
     const currentYear = new Date().getFullYear();
 
     const handleYearChange = (value) => {

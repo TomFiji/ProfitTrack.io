@@ -1,10 +1,20 @@
-import {createContext, useState, useContext, useEffect, useCallback} from "react";
-import { supabase } from '../components/config/supabase.js';
+import { createContext, useContext } from "react";
+import { useYearContext } from './YearContext.jsx';
 
 const PoshmarkContext = createContext();
 
 export const usePoshmarkContext = () => useContext(PoshmarkContext);
 
-export const PoshmarkProvider = ({children}) => {
-    
+export const PoshmarkProvider = ({ children }) => {
+    const { selectedYear } = useYearContext();
+
+    const value = {
+        selectedYear,
+    };
+
+    return (
+        <PoshmarkContext.Provider value={value}>
+            {children}
+        </PoshmarkContext.Provider>
+    );
 }
