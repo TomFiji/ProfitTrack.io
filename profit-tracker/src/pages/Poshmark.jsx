@@ -4,7 +4,7 @@ import '../css/Instructions.css'
 function Poshmark(){
     return(
         <>
-            <details>
+            <details style={{ width: '50%', margin: '20px auto' }}>
                 <summary>Instructions</summary>
                 <div class="instructions-content">
                     <h3>Steps to Obtain the CSV Report</h3>

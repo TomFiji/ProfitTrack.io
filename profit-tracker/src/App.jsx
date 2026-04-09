@@ -16,6 +16,7 @@ import "./css/App.css"
 import { ExpenseProvider } from './contexts/ExpenseContext';
 import { YearProvider } from './contexts/YearContext';
 import { PoshmarkProvider } from './contexts/PoshmarkContext';
+import { PlatformProvider } from './contexts/PlatformContext';
 import '@mantine/core/styles.css';
 import { createTheme, MantineProvider } from '@mantine/core';
 
@@ -28,6 +29,7 @@ function App() {
   const shouldShowHeader = !showHeaderRoutes.includes(location.pathname);
   return(
     <MantineProvider>
+      <PlatformProvider>
       <YearProvider>
       <ExpenseProvider>
       <PoshmarkProvider>
@@ -51,6 +53,7 @@ function App() {
       </PoshmarkProvider>
       </ExpenseProvider>
       </YearProvider>
+      </PlatformProvider>
     </MantineProvider>  
   )
 }

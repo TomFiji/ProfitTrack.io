@@ -63,7 +63,7 @@ function Header() {
   return (
     <Box pb={0}>
       <header className={classes.header}>
-        <Group justify="space-between" h="100%">
+        <Group h="100%" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', width: '100%' }}>
           <img src={ProfitTrackLogo} width='250px'></img>
 
           <Group h="100%" gap={0} visibleFrom="sm">
@@ -81,7 +81,7 @@ function Header() {
             </a>
           </Group>
 
-          <Group visibleFrom="sm">
+          <Group visibleFrom="sm" style={{ justifyContent: 'flex-end' }}>
             {isEbayConnected === false && (
               <Button id="ebay-button" onClick={connectEbayAccount}>Connect eBay</Button>
             )}

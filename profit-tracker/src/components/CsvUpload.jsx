@@ -68,7 +68,7 @@ function CsvUpload() {
     })
 
     return(
-        <>
+        <div style={{ width: '50%', margin: '0 auto' }}>
             <div {...getRootProps({
                 className: `dropzone ${isDragActive ? 'dropzone-active' : ''}`}
             )}
@@ -85,10 +85,11 @@ function CsvUpload() {
                 className="submit-button"
                 onClick={handleSubmit}
                 disabled={!parsedRows || status === 'uploading'}
+                style={{ display: 'block', margin: '12px auto 0', width: '20%' }}
             >
                 {status === 'uploading' ? 'Uploading...' : status === 'success' ? 'Uploaded!' : 'Submit'}
             </button>
-        </>
+        </div>
     )
 
 }

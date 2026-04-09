@@ -4,16 +4,16 @@ import { LineChart } from '@mantine/charts';
 import { supabase } from "./config/supabase";
 import '../css/Chart.css'
 import { useYearContext } from "../contexts/YearContext";
+import { usePoshmarkContext } from "../contexts/PoshmarkContext";
+import { usePlatformContext } from "../contexts/PlatformContext";
 
 function MonthlyLineChart({ height = "40vh", width = "100%" }){
-    const [monthlyPayoutTotals, setMonthlyPayoutTotals] = useState([])
+    const [ebayMonthlyPayoutTotals, setMonthlyPayoutTotals] = useState([])
     const [monthlyExpenseTotals, setMonthlyExpenseTotals] = useState([])
     const [data, setData] = useState([])
     const { selectedYear } = useYearContext();
-
-   /*async function refreshExpenses() {
-        await Promise.all([fetchExpensesByMonth()])
-    }*/
+    const { poshmarkEarningsByMonth } = usePoshmarkContext();
+    const { selectedPlatforms } = usePlatformContext();
     
 
     const fetchAllMonthlyPayouts = async (req, res) => {
@@ -28,14 +28,14 @@ function MonthlyLineChart({ height = "40vh", width = "100%" }){
 
             const data = await response.json();
 
-            const monthlyTotals = {}
+            const ebayMonthlyTotals = {}
 
             for (let i=0; i<data.payouts.length; i++) {
                 const month = data.payouts[i].payoutDate.slice(5,7);
-                monthlyTotals[month] = (monthlyTotals[month] || 0) + parseFloat(data.payouts[i].amount.value)
+                ebayMonthlyTotals[month] = (ebayMonthlyTotals[month] || 0) + parseFloat(data.payouts[i].amount.value)
             }
 
-            const result = Object.entries(monthlyTotals).map(([month, total]) => ({
+            const result = Object.entries(ebayMonthlyTotals).map(([month, total]) => ({
                 month,
                 total_payouts:  Math.round(total * 100) / 100
             }));
@@ -68,14 +68,11 @@ function MonthlyLineChart({ height = "40vh", width = "100%" }){
     }
 
     
-    
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    const monthCount = selectedYear === currentYear ? currentMonth : 12;
 
     const mergeData = async () => {
-
-        
-
-        console.log("monthlyPayoutTotals:", monthlyPayoutTotals);
-        console.log("monthlyExpenseTotals:", monthlyExpenseTotals);
 
 
         const monthNames = {
@@ -95,15 +92,30 @@ function MonthlyLineChart({ height = "40vh", width = "100%" }){
 
         const mergedMap = {};
 
-        monthlyPayoutTotals.forEach(p => {
-            const month = monthNames[p.month] || p.month
+        for (let i = 1; i<= monthCount; i++){
+            const monthKey = String(i).padStart(2, '0');
+            const month = monthNames[monthKey];
             mergedMap[month] = {
                 month,
-                Payout: p.total_payouts,
+                Payout: 0,
                 Expenses: 0,
-                Profit: p.total_payouts
+                Profit: 0
+                };
             };
-        });
+
+        if (selectedPlatforms.includes('ebay')){
+            ebayMonthlyPayoutTotals.forEach(p => {
+                const month = monthNames[p.month] || p.month;
+                mergedMap[month].Payout += p.total_payouts;
+            })
+        }
+
+        if (selectedPlatforms.includes('poshmark')){
+            poshmarkEarningsByMonth.forEach(p => {
+                const month = monthNames[p.month] || p.month;
+                mergedMap[month].Payout += p.total;
+            });
+        }
 
         monthlyExpenseTotals.forEach(e => {
             const month = monthNames[e.month] || e.month
@@ -113,10 +125,13 @@ function MonthlyLineChart({ height = "40vh", width = "100%" }){
             }
         })
 
-        const mergedArray = Object.values(mergedMap)
+        Object.values(mergedMap).forEach(entry => {
+            entry.Profit = entry.Payout - entry.Expenses;
+        });
+
+        const mergedArray = Object.values(mergedMap);
         mergedArray.sort((a, b) => new Date(`${selectedYear}-${a.month}-01`) - new Date(`${selectedYear}-${b.month}-01`));
         setData(mergedArray)
-        console.log(mergedArray)
     }
 
     
@@ -127,7 +142,7 @@ function MonthlyLineChart({ height = "40vh", width = "100%" }){
 
     useEffect(() => {
         mergeData()
-        }, [monthlyPayoutTotals, monthlyExpenseTotals]);   
+        }, [ebayMonthlyPayoutTotals, monthlyExpenseTotals, poshmarkEarningsByMonth, selectedPlatforms]);   
         
     const CustomTooltip = ({ payload, label }) => {
     if (!payload || payload.length === 0) return null;

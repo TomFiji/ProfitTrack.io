@@ -8,7 +8,7 @@ const PoshmarkContext = createContext();
 export const usePoshmarkContext = () => useContext(PoshmarkContext);
 
 export const PoshmarkProvider = ({ children }) => {
-    const { selectedYear, currentYear } = useYearContext();
+    const { selectedYear } = useYearContext();
     const [ annualPoshmarkEarnings, setAnnualPoshmarkEarnings ]  = useState(0)
     const [ monthlyPoshmarkEarnings, setMontlyPoshmarkEarnings ] = useState(0)
     const [ poshmarkEarningsByMonth, setPoshmarkEarningsByMonth ] = useState([])
@@ -94,9 +94,7 @@ export const PoshmarkProvider = ({ children }) => {
         useEffect(() => {
             fetchAllEarnings();
             fetchMonthlyEarnings();
-            fetchTotalExpenseAmount();
-            fetchMonthlyPayout();
-            fetchMonthlyExpenseAmount();
+            fetchEarningsByMonth();
         }, [])
     
         // Listen to auth changes and clear state on logout
@@ -104,15 +102,11 @@ export const PoshmarkProvider = ({ children }) => {
             const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
                 if (event === 'SIGNED_OUT') {
                     // Clear all state when user signs out
-                    setExpenses([]);
-                    setTotalExpenseAmount(0);
-                    setMonthlyExpenseAmount(0);
-                    setGrossPayout(0);
-                    setMonthlyPayout(0);
-                    setFilteredExpenses([]);
-                    setFilteredExpeneseTotal(0);
+                    setAnnualPoshmarkEarnings(0);
+                    setMontlyPoshmarkEarnings(0);
+                    setPoshmarkEarningsByMonth({});
                     setError(null);
-                    setSelectedYear(currentYear);
+                    
                 }
                 // Removed automatic refetch on SIGNED_IN to prevent
                 // unexpected data refreshes that ignore selectedYear

@@ -81,4 +81,25 @@ router.get('/current-monthly-total', authenticateUser, async(req, res)=>{
     }
 })
 
+router.get('/transactions', authenticateUser, async(req, res)=>{
+    try{
+        const year = req.query.year ? parseInt(req.query.year) : new Date().getFullYear();
+
+        const { data, error } = await supabase
+            .from('poshmark_payouts')
+            .select('*')
+            .eq('user_id', req.user.id)
+            .gte('order_date', `${year}-01-01`)
+            .lt('order_date', `${year+1}-01-01`)
+
+        if (error) throw error;
+
+        res.json(data);
+
+    }catch(error){
+        console.error('Error fetching transactions:', error);
+        res.status(500).json({ error: 'Database error' });
+    }
+})
+
 export default router
