@@ -8,11 +8,18 @@ function parseDate(value) {
 }
 
 export function parsePoshmarkCsv(rows) {
-    return rows.map(row => ({
-        order_id:      row['Order Id'],
-        order_date:    parseDate(row['Order Date']),
-        listing_title: row['Listing Title'],
-        order_price:   parsePrice(row['Order Price']),
-        net_earnings:  parsePrice(row['Your Earnings']),
-    }))
+    const seen = {}
+    return rows.map(row => {
+        const key = `${row['Order Id']}|${row['Listing Title']}`
+        const index = seen[key] ?? 0
+        seen[key] = index + 1
+        return {
+            order_id:      row['Order Id'],
+            order_date:    parseDate(row['Order Date']),
+            listing_title: row['Listing Title'],
+            order_price:   parsePrice(row['Order Price']),
+            net_earnings:  parsePrice(row['Your Earnings']),
+            item_index:    index,
+        }
+    })
 }
