@@ -6,13 +6,12 @@ import { authenticateUser } from '../middleware/auth.js';
 import { getValidAccessToken } from '../utils/ebayAuth.js';
 const router = express.Router()
 
-const date = new Date();
-let currentDate = `${date.getFullYear()}-${date.getMonth() +1}-${date.getDate()}`;
-
 //Gets ebay payouts for the entire year and is used in fetchGrossPayouts()
 router.get("/payouts", authenticateUser, async (req, res) => {
     try{
         const access_token = await getValidAccessToken(req.user.id)
+        const date = new Date();
+        const currentDate = `${date.getFullYear()}-${date.getMonth() +1}-${date.getDate()}`;
         const year = req.query.year ? parseInt(req.query.year) : date.getFullYear()
         const isCurrentYear = year === date.getFullYear();
         const endDate = isCurrentYear ? currentDate : `${year}-12-31`
@@ -23,7 +22,7 @@ router.get("/payouts", authenticateUser, async (req, res) => {
             }
         });
     res.json(response.data);
-    
+
     } catch (error){
         console.log("eBay API error with payouts: ", error.response?.data || error.message);
         res.status(500).json({ error: "Failed to fetch data from eBay" });
@@ -34,6 +33,8 @@ router.get("/payouts", authenticateUser, async (req, res) => {
 router.get("/monthly-payouts", authenticateUser, async (req, res) => {
     try{
         const access_token = await getValidAccessToken(req.user.id)
+        const date = new Date();
+        const currentDate = `${date.getFullYear()}-${date.getMonth() +1}-${date.getDate()}`;
         const response = await axios.get(`https://apiz.ebay.com/sell/finances/v1/payout?filter=payoutDate:[${date.getFullYear()}-${date.getMonth() +1}-1T00:00:01.000Z..${currentDate}T00:00:01.000Z]&limit=200&offset=0`, {
             headers: {
                 Authorization: `Bearer ${access_token}`,
