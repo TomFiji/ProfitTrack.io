@@ -1,6 +1,7 @@
 import { useExpenseContext } from '../contexts/ExpenseContext.jsx'
 import { useYearContext } from '../contexts/YearContext.jsx'
 import { usePoshmarkContext } from '../contexts/PoshmarkContext.jsx';
+import { useDepopContext } from '../contexts/DepopContext.jsx';
 import { IconArrowDownRight, IconArrowUpRight } from '@tabler/icons-react';
 import { Group, Paper, SimpleGrid, Text, ThemeIcon } from '@mantine/core';
 import classes from '../css/StatGridIcons.module.css';
@@ -14,10 +15,11 @@ function StatsGridIcons() {
 
   const { totalExpenseAmount, grossPayout, monthlyExpenseAmount, monthlyPayout } = useExpenseContext()
   const { annualPoshmarkEarnings, monthlyPoshmarkEarnings } = usePoshmarkContext()
+  const { annualDepopEarnings, monthlyDepopEarnings } = useDepopContext()
   const { selectedYear } = useYearContext()
 
-  const netPayout = (grossPayout - totalExpenseAmount + annualPoshmarkEarnings);
-  const netMonthlyPayout = (monthlyPayout - monthlyExpenseAmount + monthlyPoshmarkEarnings);
+  const netPayout = (grossPayout - totalExpenseAmount + annualPoshmarkEarnings + annualDepopEarnings);
+  const netMonthlyPayout = (monthlyPayout - monthlyExpenseAmount + monthlyPoshmarkEarnings + monthlyDepopEarnings);
 
   const isCurrentYear = new Date().getFullYear() === selectedYear
 

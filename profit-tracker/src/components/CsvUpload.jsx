@@ -5,9 +5,7 @@ import '../css/Dropzone.css'
 import {supabase} from './config/supabase.js'
 
 
-const REQUIRED_COLUMNS = ['Order Date', 'Order Id', 'Listing Title', 'Order Price', 'Your Earnings']
-
-function CsvUpload() {
+function CsvUpload({ platformLabel, requiredColumns, headerMarker, endpoint }) {
     const [file, setFile] = useState([])
     const [parsedRows, setParsedRows] = useState(null)
     const [error, setError] = useState(null)
@@ -23,13 +21,13 @@ function CsvUpload() {
             skipEmptyLines: 'greedy',
             beforeFirstChunk: (chunk) => {
                 const lines = chunk.split('\n')
-                const headerIndex = lines.findIndex(line => line.startsWith('Listing Date'))
+                const headerIndex = lines.findIndex(line => line.startsWith(headerMarker))
                 return lines.slice(headerIndex).join('\n')
             },
             complete: (results) => {
                 console.log(results)
                 const columns = results.meta.fields
-                const missing = REQUIRED_COLUMNS.filter(col => !columns.includes(col))
+                const missing = requiredColumns.filter(col => !columns.includes(col))
                 if (missing.length > 0) {
                     setError(`Invalid CSV: missing columns: ${missing.join(', ')}`)
                     return
@@ -37,7 +35,7 @@ function CsvUpload() {
                 setParsedRows(results.data.slice(0, -1))
             },
         })
-    }, [])
+    }, [headerMarker, requiredColumns])
 
     const handleSubmit = async () => {
         if (!parsedRows) return
@@ -45,12 +43,12 @@ function CsvUpload() {
         try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) throw new Error('No active session');
-            const res = await fetch('/api/poshmark/upload', {
+            const res = await fetch(endpoint, {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session.access_token}` 
-                
+                    'Authorization': `Bearer ${session.access_token}`
+
                 },
                 body: JSON.stringify({ rows: parsedRows })
             })
@@ -65,7 +63,6 @@ function CsvUpload() {
     const {getRootProps, getInputProps, isDragActive} = useDropzone({
         onDrop,
         accept: { 'text/csv': ['.csv']},
-        maxFiles: 1 
     })
 
     return(
@@ -78,7 +75,7 @@ function CsvUpload() {
                 {
                     isDragActive ?
                         <p>Drop the files here...</p>:
-                        file.name ? <a>{file.name}</a> : <p>Drag the Poshmark CSV here, or click to select files</p>
+                        file.name ? <a>{file.name}</a> : <p>Drag the {platformLabel} CSV here, or click to select files</p>
                 }
                 {error && <p className="dropzone-error">{error}</p>}
             </div>

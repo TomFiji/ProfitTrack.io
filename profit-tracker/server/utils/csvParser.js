@@ -46,7 +46,7 @@ export function parseDepopCsv(rows) {
 
             const total = parsePrice(row['Total'])
             const shipping_fee = parsePrice(row['Buyer shipping cost'])
-            const depop_fee = parsePrice(row['Depop Payment'])
+            const depop_fee = parsePrice(row['Depop Payments fee'])
             const sales_tax = parsePrice(row['US Sales tax'])
             const boosting_fee = parsePrice(row['Boosting fee'])
             const total_fees = shipping_fee + depop_fee + sales_tax+ boosting_fee

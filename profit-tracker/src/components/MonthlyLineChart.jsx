@@ -5,6 +5,7 @@ import { supabase } from "./config/supabase";
 import '../css/Chart.css'
 import { useYearContext } from "../contexts/YearContext";
 import { usePoshmarkContext } from "../contexts/PoshmarkContext";
+import { useDepopContext } from "../contexts/DepopContext";
 import { usePlatformContext } from "../contexts/PlatformContext";
 
 function MonthlyLineChart({ height = "40vh", width = "100%" }){
@@ -13,6 +14,7 @@ function MonthlyLineChart({ height = "40vh", width = "100%" }){
     const [data, setData] = useState([])
     const { selectedYear } = useYearContext();
     const { poshmarkEarningsByMonth } = usePoshmarkContext();
+    const { depopEarningsByMonth } = useDepopContext();
     const { selectedPlatforms } = usePlatformContext();
     
 
@@ -112,6 +114,13 @@ function MonthlyLineChart({ height = "40vh", width = "100%" }){
 
         if (selectedPlatforms.includes('poshmark')){
             poshmarkEarningsByMonth.forEach(p => {
+                const month = monthNames[p.month] || p.month;
+                mergedMap[month].Payout += p.total;
+            });
+        }
+
+        if (selectedPlatforms.includes('depop')){
+            depopEarningsByMonth.forEach(p => {
                 const month = monthNames[p.month] || p.month;
                 mergedMap[month].Payout += p.total;
             });

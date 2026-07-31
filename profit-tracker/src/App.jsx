@@ -17,6 +17,7 @@ import { ExpenseProvider } from './contexts/ExpenseContext';
 import { YearProvider } from './contexts/YearContext';
 import { PoshmarkProvider } from './contexts/PoshmarkContext';
 import { PlatformProvider } from './contexts/PlatformContext';
+import { DepopProvider } from './contexts/DepopContext';
 import '@mantine/core/styles.css';
 import { createTheme, MantineProvider } from '@mantine/core';
 
@@ -33,6 +34,7 @@ function App() {
       <YearProvider>
       <ExpenseProvider>
       <PoshmarkProvider>
+      <DepopProvider>
         <div className="app-shell">
           {shouldShowHeader && <Header />}
           <main className="main-content">
@@ -46,10 +48,11 @@ function App() {
               <Route path="/verify-email" element={<VerifyEmailPage />}/>
               <Route path="/forgot-password" element={<ForgotPasswordPage />}/>
               <Route path="/confirm-passwords" element={<ProtectedRoute>{<ConfirmPasswordsPage />}</ProtectedRoute>}/>
-              <Route path='/poshmark' element={<ProtectedRoute>{<Poshmark />}</ProtectedRoute>}/>
+              <Route path='/poshmarkdepop' element={<ProtectedRoute>{<Poshmark />}</ProtectedRoute>}/>
             </Routes>
           </main>
         </div>
+      </DepopProvider>  
       </PoshmarkProvider>
       </ExpenseProvider>
       </YearProvider>
