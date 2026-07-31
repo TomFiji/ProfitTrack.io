@@ -20,13 +20,14 @@ function CsvUpload() {
         setParsedRows(null)
         Papa.parse(files[0], {
             header: true,
-            skipEmptyLines: true,
+            skipEmptyLines: 'greedy',
             beforeFirstChunk: (chunk) => {
                 const lines = chunk.split('\n')
                 const headerIndex = lines.findIndex(line => line.startsWith('Listing Date'))
                 return lines.slice(headerIndex).join('\n')
             },
             complete: (results) => {
+                console.log(results)
                 const columns = results.meta.fields
                 const missing = REQUIRED_COLUMNS.filter(col => !columns.includes(col))
                 if (missing.length > 0) {

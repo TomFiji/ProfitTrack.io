@@ -20,7 +20,7 @@ export const usePayout = () => {
 
                 let grossPayout = 0;
 
-                for (let i=0; i<data.payouts.length; i++){
+                for (let i=0; i<(data.payouts?.length ?? 0); i++){
                     grossPayout += parseFloat(data.payouts[i].amount.value);
                 }
 

@@ -21,7 +21,7 @@ router.post('/upload', authenticateUser, async (req, res) => {
 
         const { error } = await supabase
             .from('poshmark_payouts')
-            .upsert(records, { onConflict: 'order_id,listing_title' })
+            .upsert(records, { onConflict: 'order_id,listing_title,item_index' })
 
         if (error) throw error
 

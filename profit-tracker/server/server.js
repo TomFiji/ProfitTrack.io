@@ -28,7 +28,7 @@ app.use(cors({
     exposedHeaders: ['Content-Type', 'Authorization']
 }))
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 app.use('/api/expenses', expensesData)
 
